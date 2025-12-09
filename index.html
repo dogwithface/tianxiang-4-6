@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紫微架構與十二宮位 - 天相4.6 (按鈕網格化)</title>
+    
+    <style>
+        /* 基礎樣式 */
+        body {
+            font-family: '微軟正黑體', 'Microsoft JhengHei', Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #444;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 95%;
+            max-width: 1200px;
+        }
+        /* 標題 */
+        h1 {
+            text-align: center;
+            color: #5e548e;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+        h2 {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin: 15px 0 10px;
+            font-weight: 600;
+        }
+        /* ====== 佈局容器 (核心：左右結構) ====== */
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        /* 左側控制區 (Sidebar) */
+        .controls {
+            flex: 0 0 260px;
+            text-align: center;
+            border-right: 1px solid #f0f0f0;
+            padding-right: 30px;
+        }
+        /* 右側命盤區 */
+        .board-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* ====== 按鈕樣式 (柔和版) ====== */
+        /* 模式切換按鈕 */
+        #mode-switch {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        #mode-switch button {
+            background-color: #90a4ae;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+        #mode-switch button:hover { background-color: #78909c; }
+        #mode-switch button.active {
+            background-color: #546e7a;
+            font-weight: bold;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        /* 疊加按鈕 */
+        #overlay-toggle-btn {
+            background-color: #a5d6a7;
+            color: #2e5e32;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        #overlay-toggle-btn:hover { background-color: #81c784; }
+        #overlay-toggle-btn.active {
+            background-color: #66bb6a;
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        /* 選單容器 */
+        .selector-group {
+            border: 1px solid #f0f0f0;
+            background-color: #fafafa;
+            padding: 15px 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        /* ====== 新增：地支按鈕網格佈局 ====== */
+        #ziwei-dz-buttons, #palace-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            justify-content: center;
+            align-items: center;
+            gap: 4px; /* 按鈕間距 */
+            padding: 5px;
+            /* 讓中間 2x2 留空，並指定 12 宮位的 grid 區域 */
+            grid-template-areas:
+                "p6 p7 p8 p9"
+                "p5 . . p10"
+                "p4 . . p11"
+                "p3 p2 p1 p12";
+        }
+        /* 12宮位小按鈕 (調整大小以適應4x4網格) */
+        .palace-btn {
+            background-color: #cfd8dc;
+            color: #455a64;
+            border: none;
+            padding: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+            width: 100%; /* 佔滿單元格 */
+            height: auto;
+            aspect-ratio: 1 / 1; /* 保持正方形 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .palace-btn:hover { background-color: #b0bec5; }
+        /* 選中狀態 - 柔和的赤陶色/珊瑚色 */
+        .palace-btn.active {
+            background-color: #ff8a65;
+            color: white;
+            font-weight: bold;
+            transform: scale(1.1);
+            box-shadow: 0 2px 5px rgba(255, 138, 101, 0.4);
+        }
+
+        /* --------------------------------- */
+        /* 根據地支定位按鈕到對應的 Grid Area */
+        /* --------------------------------- */
+        #ziwei-dz-buttons button[data-dz="巳"], #palace-buttons button[data-dz="巳"] { grid-area: p6; }
+        #ziwei-dz-buttons button[data-dz="午"], #palace-buttons button[data-dz="午"] { grid-area: p7; }
+        #ziwei-dz-buttons button[data-dz="未"], #palace-buttons button[data-dz="未"] { grid-area: p8; }
+        #ziwei-dz-buttons button[data-dz="申"], #palace-buttons button[data-dz="申"] { grid-area: p9; }
+        
+        #ziwei-dz-buttons button[data-dz="辰"], #palace-buttons button[data-dz="辰"] { grid-area: p5; }
+        #ziwei-dz-buttons button[data-dz="酉"], #palace-buttons button[data-dz="酉"] { grid-area: p10; }
+        
+        #ziwei-dz-buttons button[data-dz="卯"], #palace-buttons button[data-dz="卯"] { grid-area: p4; }
+        #ziwei-dz-buttons button[data-dz="戌"], #palace-buttons button[data-dz="戌"] { grid-area: p11; }
+
+        #ziwei-dz-buttons button[data-dz="寅"], #palace-buttons button[data-dz="寅"] { grid-area: p3; }
+        #ziwei-dz-buttons button[data-dz="丑"], #palace-buttons button[data-dz="丑"] { grid-area: p2; }
+        #ziwei-dz-buttons button[data-dz="子"], #palace-buttons button[data-dz="子"] { grid-area: p1; }
+        #ziwei-dz-buttons button[data-dz="亥"], #palace-buttons button[data-dz="亥"] { grid-area: p12; }
+        /* --------------------------------- */
+
+        /* --- 盤面樣式 (保持清晰但微調線條) --- */
+        .zwdz-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            width: 100%;
+            max-width: 700px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            border: 2px solid #546e7a;
+            position: relative;
+            background-color: #fff;
+        }
+        #line-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; grid-area: 1 / 1 / 5 / 5; z-index: 100; }
+        .sfz-line {
+            position: absolute; background-color: transparent; border: none;
+            border-top: 2px dashed rgba(255, 112, 67, 0.5);
+            pointer-events: none; transform-origin: 0% 0%;
+        }
+        .palace {
+            border: 1px solid #cfd8dc;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: #fafdff;
+            padding: 5px 5px;
+            line-height: 1.2;
+            font-size: clamp(0.8rem, 2vw, 1.8em);
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .palace:hover { background-color: #f0f7fa; }
+        /* 三方四正 高亮樣式 (柔和版) */
+        .palace.san-fang { background-color: #fff3e0; border: 2px solid #ffb74d; }
+        .palace.si-zheng { background-color: #e3f2fd; border: 2px solid #64b5f6; }
+        /* 宮位名稱標籤 */
+        .palace-name {
+            position: absolute; bottom: 5px; left: 5px;
+            font-size: 0.6em; color: #fff;
+            font-weight: normal;
+            background-color: #7986cb;
+            padding: 2px 6px; border-radius: 4px; z-index: 10;
+        }
+        /* 命宮標籤放大並改為橘底 */
+        .palace-name.is-minggong {
+            font-size: 0.85em; 
+            font-weight: bold;
+            padding: 3px 8px;
+            background-color: #ff8a65; 
+        }
+        .dz-label { position: absolute; bottom: 5px; right: 5px; font-size: 0.5em; color: #b0bec5; font-weight: normal; }
+        
+        /* 星曜文字顏色 */
+        .star-info-container {
+            display: flex;
+            flex-wrap: wrap; 
+            align-items: center;
+            margin-bottom: 2px;
+            font-size: 0.75em;
+            line-height: 1.1;
+        }
+        .star-main, .star-assist { font-size: 1.1em; font-weight: bold; line-height: 1.1; color: #7e57c2; }
+        .star-assist { color: #8d6e63; }
+
+        /* --- 祿羊陀新樣式 (用框線突出) --- */
+        .star-box {
+            /* 基礎樣式：讓星曜文字包在一個盒子裡 */
+            padding: 1px 3px; 
+            border-radius: 4px;
+            margin: 0 2px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        /* 祿存：綠色實心框與綠色字 */
+        .star-box.luchun {
+            color: #4CAF55; /* 綠色字 */
+            border: 2px solid #4CAF55; /* 綠色實線框 */
+        }
+        /* 羊陀：紅色空心框與紅色字 */
+        .star-box.yangtuo {
+            color: #D32F2F; /* 紅色字 */
+            border: 2px solid #D32F2F; /* 紅色實線框 */
+        }
+        
+        /* --- 四化標籤樣式 --- */
+        .si-hua {
+            font-size: 1.1em; 
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin-left: 5px;
+            vertical-align: middle;
+            line-height: 1.1;
+            display: inline-block;
+            color: white !important;
+        }
+        /* 化忌：紅底白字 */
+        .si-hua.huaji { background-color: #D32F2F; }     
+        /* 化祿, 化權, 化科：綠底白字 */
+        .si-hua.hualu, .si-hua.huaquan, .si-hua.huake { background-color: #4CAF55; } 
+
+        /* 定位 */
+        #p1  { grid-area: 4 / 3 / 5 / 4; } #p2  { grid-area: 4 / 2 / 5 / 3; } #p3  { grid-area: 4 / 1 / 5 / 2; }
+        #p4  { grid-area: 3 / 1 / 4 / 2; } #p5  { grid-area: 2 / 1 / 3 / 2; } #p6  { grid-area: 1 / 1 / 2 / 2; }
+        #p7  { grid-area: 1 / 2 / 2 / 3; } #p8  { grid-area: 1 / 3 / 2 / 4; } #p9  { grid-area: 1 / 4 / 2 / 5; }
+        #p10 { grid-area: 2 / 4 / 3 / 5; } #p11 { grid-area: 3 / 4 / 4 / 5; } #p12 { grid-area: 4 / 4 / 5 / 5; }
+        /* 中間標題 */
+        #center-title {
+            grid-area: 2 / 2 / 4 / 4;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5em; color: #5e548e;
+            font-weight: bold; text-align: center; line-height: 1.5; z-index: 50;
+        }
+        /* ====== 手機/平板優化 (當螢幕變窄時，佈局改為垂直堆疊) ====== */
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column; gap: 20px; }
+            .controls {
+                width: 100%; flex: none; border-right: none;
+                border-bottom: 1px solid #f0f0f0;
+                padding-right: 0; padding-bottom: 20px; margin-bottom: 20px;
+            }
+            #mode-switch { flex-direction: row; justify-content: center; }
+            .zwdz-board { width: 100%; max-width: 500px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>紫微斗數 結構教學 (天相4.6)</h1>
+
+        <div class="main-layout">
+            <div class="controls">
+                <div id="mode-switch">
+                    <button id="star-mode-btn" class="active">星曜架構</button>
+                    <button id="palace-mode-btn">十二宮位</button>
+                </div>
+
+                <div id="tiangan-selector" class="selector-group">
+                    <h2>流年天干 (四化與祿羊陀)</h2>
+                    <select id="tiangan-select">
+                        <option value="">不顯示四化/祿羊陀</option>
+                        <option value="甲">甲年</option>
+                        <option value="乙">乙年</option>
+                        <option value="丙">丙年</option>
+                        <option value="丁">丁年</option>
+                        <option value="戊">戊年</option>
+                        <option value="己">己年</option>
+                        <option value="庚">庚年</option>
+                        <option value="辛">辛年</option>
+                        <option value="壬">壬年</option>
+                        <option value="癸">癸年</option>
+                    </select>
+                </div>
+
+                <div id="star-selector" class="selector-group">
+                    <h2>紫微星 落宮</h2>
+                    <div id="ziwei-dz-buttons"></div>
+                </div>
+
+                <div id="palace-overlay-control">
+                    <button id="overlay-toggle-btn">顯示命宮體系</button>
+                </div>
+
+                <div id="palace-selector" class="selector-group" style="display:none;">
+                    <h2>命宮 所在宮位</h2>
+                    <div id="palace-buttons"></div>
+                </div>
+            </div>
+
+            <div class="board-area">
+                <div class="zwdz-board">
+                    <div class="palace" id="p1" data-dz="子"></div>
+                    <div class="palace" id="p2" data-dz="丑"></div>
+                    <div class="palace" id="p3" data-dz="寅"></div>
+                    <div class="palace" id="p4" data-dz="卯"></div>
+                    <div class="palace" id="p5" data-dz="辰"></div>
+                    <div class="palace" id="p6" data-dz="巳"></div>
+                    <div class="palace" id="p7" data-dz="午"></div>
+                    <div class="palace" id="p8" data-dz="未"></div>
+                    <div class="palace" id="p9" data-dz="申"></div>
+                    <div class="palace" id="p10" data-dz="酉"></div>
+                    <div class="palace" id="p11" data-dz="戌"></div>
+                    <div class="palace" id="p12" data-dz="亥"></div>
+
+                    <div id="line-overlay"></div>
+
+                    <div id="center-title">
+                        **星曜架構**
+                    </div>
+                </div>
+
+                <p style="text-align: center; margin-top: 15px; font-size: 1.1em; color: #90a4ae;">
+                    💡 <strong style="color: #7986cb;">點擊宮位</strong>可顯示三方四正
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 核心星曜數據結構 (保持不變)
+        const starPlacement = [
+            { name: '紫微', delta: 0, group: 'Z', color: 'star-main', desc: '帝座，領導' },
+            { name: '天機', delta: 11, group: 'Z', color: 'star-main', desc: '智慧' },
+            { name: '太陽', delta: 9, group: 'Z', color: 'star-main', desc: '官祿' },
+            { name: '武曲', delta: 8, group: 'Z', color: 'star-main', desc: '財星' },
+            { name: '天同', delta: 7, group: 'Z', color: 'star-main', desc: '福星' },
+            { name: '廉貞', delta: 4, group: 'Z', color: 'star-main', desc: '囚星' },
+            { name: '天府', tfOffset: 0, group: 'F', color: 'star-assist', desc: '財庫' },
+            { name: '太陰', tfOffset: 1, group: 'F', color: 'star-assist', desc: '柔美' },
+            { name: '貪狼', tfOffset: 2, group: 'F', color: 'star-assist', desc: '慾望' },
+            { name: '巨門', tfOffset: 3, group: 'F', color: 'star-assist', desc: '是非' },
+            { name: '天相', tfOffset: 4, group: 'F', color: 'star-assist', desc: '服務' },
+            { name: '天梁', tfOffset: 5, group: 'F', color: 'star-assist', desc: '蔭星' },
+            { name: '七殺', tfOffset: 6, group: 'F', color: 'star-assist', desc: '開創' },
+            { name: '破軍', tfOffset: 10, group: 'F', color: 'star-assist', desc: '變化' },
+            { name: '文昌', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '科甲' },
+            { name: '文曲', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '藝文' },
+            { name: '右弼', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '輔佐' }
+        ];
+
+        // 四化表數據
+        const siHuaTable = {
+            '甲': { '廉貞': '祿', '破軍': '權', '文曲': '科', '太陽': '忌' },
+            '乙': { '天機': '祿', '天梁': '權', '紫微': '科', '太陰': '忌' },
+            '丙': { '天同': '祿', '天機': '權', '文昌': '科', '廉貞': '忌' },
+            '丁': { '太陰': '祿', '天同': '權', '天機': '科', '巨門': '忌' },
+            '戊': { '貪狼': '祿', '太陰': '權', '右弼': '科', '天機': '忌' },
+            '己': { '武曲': '祿', '貪狼': '權', '天梁': '科', '文曲': '忌' },
+            '庚': { '太陽': '祿', '武曲': '權', '天同': '科', '天相': '忌' }, 
+            '辛': { '巨門': '祿', '太陽': '權', '文昌': '科', '文曲': '忌' },
+            '壬': { '天梁': '祿', '紫微': '權', '天府': '科', '武曲': '忌' },
+            '癸': { '破軍': '祿', '巨門': '權', '太陰': '科', '貪狼': '忌' }
+        };
+
+        // 祿羊陀排列表
+        const luYangTuoTable = {
+            '甲': ['寅', '卯', '丑'], '乙': ['卯', '辰', '寅'], '丙': ['巳', '午', '辰'],
+            '丁': ['午', '未', '巳'], '戊': ['巳', '午', '辰'], '己': ['午', '未', '巳'],
+            '庚': ['申', '酉', '未'], '辛': ['酉', '戌', '申'], '壬': ['亥', '子', '戌'],
+            '癸': ['子', '丑', '亥']
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ziweiDzButtonsContainer = document.getElementById('ziwei-dz-buttons');
+            const palaceButtonsContainer = document.getElementById('palace-buttons');
+            const tianganSelect = document.getElementById('tiangan-select');
+            const palaceElements = [
+                document.getElementById('p1'), document.getElementById('p2'), document.getElementById('p3'),
+                document.getElementById('p4'), document.getElementById('p5'), document.getElementById('p6'),
+                document.getElementById('p7'), document.getElementById('p8'), document.getElementById('p9'),
+                document.getElementById('p10'), document.getElementById('p11'), document.getElementById('p12')
+            ];
+            const lineOverlay = document.getElementById('line-overlay');
+            const starModeBtn = document.getElementById('star-mode-btn');
+            const palaceModeBtn = document.getElementById('palace-mode-btn');
+            const starSelector = document.getElementById('star-selector');
+            const palaceSelector = document.getElementById('palace-selector');
+            const overlayControl = document.getElementById('palace-overlay-control');
+            const overlayToggleBtn = document.getElementById('overlay-toggle-btn');
+            const centerTitle = document.getElementById('center-title');
+
+            let currentMode = 'star';
+            let activeZiWeiDz = '子';
+            let activeMingGongDz = '子';
+            let showPalaceOverlay = false;
+            let activeSanFangSiZhengDz = null;
+            let activeTianGan = '';
+
+            // 12 地支宮位列表 (用於按鈕創建)
+            const dzMap = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+            const dzToIdx = dzMap.reduce((acc, dz, index) => { acc[dz] = index; return acc; }, {});
+            const palaceOrder = ['命', '兄', '夫', '子', '財', '疾', '遷', '僕', '官', '田', '福', '父'];
+
+            // 宮位中心點座標 (保持不變)
+            const palaceCenters = {
+                'p1': { x: 62.5, y: 87.5 }, 'p2': { x: 37.5, y: 87.5 }, 'p3': { x: 12.5, y: 87.5 },
+                'p4': { x: 12.5, y: 62.5 }, 'p5': { x: 12.5, y: 37.5 }, 'p6': { x: 12.5, y: 12.5 },
+                'p7': { x: 37.5, y: 12.5 }, 'p8': { x: 62.5, y: 12.5 }, 'p9': { x: 87.5, y: 12.5 },
+                'p10': { x: 87.5, y: 37.5 }, 'p11': { x: 87.5, y: 62.5 }, 'p12': { x: 87.5, y: 87.5 }
+            };
+            const HALF_PALACE_SIZE = 12.5;
+            const LINE_OVERLAP_FACTOR = 1.0;
+
+            function drawLine(p1Id, p2Id, container) {
+                const c1 = palaceCenters[p1Id]; const c2 = palaceCenters[p2Id];
+                const dx = c2.x - c1.x; const dy = c2.y - c1.y;
+                const totalLength = Math.sqrt(dx * dx + dy * dy);
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                const ux = dx / totalLength; const uy = dy / totalLength;
+                const startX = c1.x + ux * (HALF_PALACE_SIZE * LINE_OVERLAP_FACTOR);
+                const startY = c1.y + uy * (HALF_PALACE_SIZE * LINE_OVERLAP_FACTOR);
+                const newLength = totalLength - (2 * HALF_PALACE_SIZE * LINE_OVERLAP_FACTOR);
+                if (newLength <= 0) return;
+                const line = document.createElement('div');
+                line.classList.add('sfz-line');
+                line.style.width = `${newLength}%`;
+                line.style.left = `${startX}%`;
+                line.style.top = `${startY}%`;
+                line.style.transform = `rotate(${angle}deg)`;
+                container.appendChild(line);
+            }
+
+            function drawSFZLines(dz, container) {
+                if (!dz) return;
+                const selectedIdx = dzToIdx[dz];
+                const indices = [selectedIdx, (selectedIdx + 4) % 12, (selectedIdx - 4 + 12) % 12, (selectedIdx + 6) % 12];
+                const ids = indices.map(idx => 'p' + (idx + 1));
+                drawLine(ids[0], ids[1], container); drawLine(ids[1], ids[2], container);
+                drawLine(ids[2], ids[0], container); drawLine(ids[0], ids[3], container);
+            }
+
+            function calculateStarLayout(ziWeiDz, activeTianGan) {
+                const layout = {};
+                const ziWeiIdx = dzToIdx[ziWeiDz];
+                const tianFuIdx = (4 - ziWeiIdx + 12) % 12;
+
+                // 1. 放置主星和輔星
+                const mainAndSiHuaStars = starPlacement.filter(star => star.group === 'Z' || star.group === 'F');
+                
+                mainAndSiHuaStars.forEach((star) => {
+                    let targetIdx;
+                    if (star.group === 'Z') { targetIdx = (ziWeiIdx + star.delta) % 12; }
+                    else if (star.group === 'F') { targetIdx = (tianFuIdx + star.tfOffset) % 12; }
+                    const palaceId = 'p' + (targetIdx + 1);
+
+                    if (!layout[palaceId]) { layout[palaceId] = []; }
+                    const starHTML = `<div class="star-info-container"><span class="${star.color}" data-star="${star.name}" title="${star.desc}">${star.name}</span></div>`;
+                    layout[palaceId].push({ name: star.name, html: starHTML, isMain: star.group === 'Z', type: 'Main' });
+                });
+
+                // 2. 放置祿羊陀
+                if (activeTianGan && luYangTuoTable[activeTianGan]) {
+                    const [luDz, yangDz, tuoDz] = luYangTuoTable[activeTianGan];
+                    
+                    const luPalaceId = 'p' + (dzToIdx[luDz] + 1);
+                    const yangPalaceId = 'p' + (dzToIdx[yangDz] + 1);
+                    const tuoPalaceId = 'p' + (dzToIdx[tuoDz] + 1);
+
+                    const luHTML = `<div class="star-info-container"><span class="star-box luchun" data-star="祿存">祿存</span></div>`;
+                    const yangHTML = `<div class="star-info-container"><span class="star-box yangtuo" data-star="擎羊">擎羊</span></div>`;
+                    const tuoHTML = `<div class="star-info-container"><span class="star-box yangtuo" data-star="陀羅">陀羅</span></div>`;
+
+                    if (!layout[luPalaceId]) { layout[luPalaceId] = []; }
+                    layout[luPalaceId].push({ name: '祿存', html: luHTML, isMain: false, type: 'Aux' });
+                    
+                    if (!layout[yangPalaceId]) { layout[yangPalaceId] = []; }
+                    layout[yangPalaceId].push({ name: '擎羊', html: yangHTML, isMain: false, type: 'Aux' });
+
+                    if (!layout[tuoPalaceId]) { layout[tuoPalaceId] = []; }
+                    layout[tuoPalaceId].push({ name: '陀羅', html: tuoHTML, isMain: false, type: 'Aux' });
+                }
+
+                return layout;
+            }
+
+            function calculatePalaceLayout(mingGongDz) {
+                const layout = {};
+                const mingGongIdx = dzToIdx[mingGongDz];
+                palaceOrder.forEach((palaceName, offset) => {
+                    const targetIdx = (mingGongIdx - offset + 12) % 12;
+                    const palaceId = 'p' + (targetIdx + 1);
+                    
+                    const mingGongClass = (palaceName === '命') ? ' is-minggong' : '';
+
+                    layout[palaceId] = `<span class="palace-name${mingGongClass}">${palaceName}</span>`;
+                });
+                return layout;
+            }
+
+            function renderLayout() {
+                lineOverlay.innerHTML = '';
+                palaceElements.forEach(palace => {
+                    const dz = palace.getAttribute('data-dz');
+                    palace.innerHTML = `<span class="dz-label">${dz}</span>`; 
+                    palace.classList.remove('san-fang', 'si-zheng');
+                });
+
+                if (activeSanFangSiZhengDz) {
+                    drawSFZLines(activeSanFangSiZhengDz, lineOverlay);
+                    const selectedIdx = dzToIdx[activeSanFangSiZhengDz];
+                    const sanFangIndices = [selectedIdx, (selectedIdx + 4) % 12, (selectedIdx - 4 + 12) % 12];
+                    const siZhengIndex = (selectedIdx + 6) % 12;
+                    sanFangIndices.forEach(idx => { document.getElementById('p' + (idx + 1)).classList.add('san-fang'); });
+                    document.getElementById('p' + (siZhengIndex + 1)).classList.add('si-zheng');
+                }
+
+                const currentSiHua = activeTianGan ? siHuaTable[activeTianGan] : {};
+                const starLayout = calculateStarLayout(activeZiWeiDz, activeTianGan);
+
+                if (currentMode === 'star') {
+                    for (const id in starLayout) {
+                        const palace = document.getElementById(id);
+                        if (palace) {
+                            const starHtmlWithSiHua = starLayout[id].map(starObj => {
+                                let starHTML = starObj.html;
+                                
+                                // 僅對主星/輔星標註四化
+                                if (starObj.type === 'Main' && currentSiHua[starObj.name]) {
+                                    const huaType = currentSiHua[starObj.name]; 
+                                    let huaClass = '';
+                                    if (huaType === '祿') { huaClass = 'hualu'; }
+                                    else if (huaType === '權') { huaClass = 'huaquan'; }
+                                    else if (huaType === '科') { huaClass = 'huake'; }
+                                    else if (huaType === '忌') { huaClass = 'huaji'; }
+
+                                    const siHuaTag = `<span class="si-hua ${huaClass}">${huaType}</span>`;
+                                    starHTML = starHTML.replace(`</span></div>`, `</span>${siHuaTag}</div>`);
+                                }
+                                
+                                return starHTML;
+                            }).join('');
+
+                            palace.innerHTML = starHtmlWithSiHua + palace.innerHTML; 
+                        }
+                    }
+
+                    if (showPalaceOverlay) {
+                        const palaceLayout = calculatePalaceLayout(activeMingGongDz);
+                        for (const id in palaceLayout) {
+                            const palace = document.getElementById(id);
+                            if (palace) { 
+                                palace.innerHTML += palaceLayout[id]; 
+                            }
+                        }
+                    }
+
+                    const overlayText = showPalaceOverlay ? ` (命宮在 ${activeMingGongDz})` : '';
+                    const tianganText = activeTianGan ? ` / **${activeTianGan}** 年四化/祿羊陀` : '';
+                    centerTitle.innerHTML = `紫微在 **${activeZiWeiDz}** 宮${overlayText}${tianganText}`;
+
+                    document.querySelectorAll('#ziwei-dz-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`#ziwei-dz-buttons .palace-btn[data-dz="${activeZiWeiDz}"]`).classList.add('active');
+                    document.querySelectorAll('#palace-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`#palace-buttons .palace-btn[data-dz="${activeMingGongDz}"]`).classList.add('active');
+
+                } else {
+                    const palaceLayout = calculatePalaceLayout(activeMingGongDz);
+                    for (const id in palaceLayout) {
+                        const palace = document.getElementById(id);
+                        if (palace) { 
+                            palace.innerHTML = palaceLayout[id] + palace.innerHTML; 
+                        }
+                    }
+                    centerTitle.innerHTML = `命宮在 **${activeMingGongDz}** 宮<br>十二宮位架構`;
+                    document.querySelectorAll('#palace-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`#palace-buttons .palace-btn[data-dz="${activeMingGongDz}"]`).classList.add('active');
+                }
+            }
+
+            function switchMode(mode) {
+                currentMode = mode;
+                if (mode === 'star') {
+                    starModeBtn.classList.add('active');
+                    palaceModeBtn.classList.remove('active');
+                    starSelector.style.display = 'block';
+                    palaceSelector.style.display = 'block';
+                    overlayControl.style.display = 'block';
+                    tianganSelect.parentNode.style.display = 'block';
+                } else {
+                    starModeBtn.classList.remove('active');
+                    palaceModeBtn.classList.add('active');
+                    starSelector.style.display = 'none';
+                    palaceSelector.style.display = 'block';
+                    overlayControl.style.display = 'none';
+                    showPalaceOverlay = false;
+                    overlayToggleBtn.classList.remove('active');
+                    tianganSelect.parentNode.style.display = 'none';
+                }
+                renderLayout();
+            }
+
+            // 初始化按鈕
+            dzMap.forEach(dz => {
+                const starButton = document.createElement('button');
+                starButton.textContent = dz;
+                starButton.classList.add('palace-btn');
+                starButton.setAttribute('data-dz', dz);
+                starButton.addEventListener('click', function() { activeZiWeiDz = dz; renderLayout(); });
+                ziweiDzButtonsContainer.appendChild(starButton);
+                const palaceButton = document.createElement('button');
+                palaceButton.textContent = dz;
+                palaceButton.classList.add('palace-btn');
+                palaceButton.setAttribute('data-dz', dz);
+                palaceButton.addEventListener('click', function() { activeMingGongDz = dz; renderLayout(); });
+                palaceButtonsContainer.appendChild(palaceButton);
+            });
+
+            // 疊加按鈕事件
+            overlayToggleBtn.addEventListener('click', function() {
+                showPalaceOverlay = !showPalaceOverlay;
+                overlayToggleBtn.classList.toggle('active', showPalaceOverlay);
+                renderLayout();
+            });
+
+            // 模式切換事件
+            starModeBtn.addEventListener('click', () => switchMode('star'));
+            palaceModeBtn.addEventListener('click', () => switchMode('palace'));
+
+            // 天干選擇器事件監聽
+            tianganSelect.addEventListener('change', function() {
+                activeTianGan = this.value;
+                renderLayout();
+            });
+
+            // 宮位點擊事件 (三方四正)
+            palaceElements.forEach(palace => {
+                palace.addEventListener('click', function() {
+                    const clickedDz = palace.getAttribute('data-dz');
+                    activeSanFangSiZhengDz = (activeSanFangSiZhengDz === clickedDz) ? null : clickedDz;
+                    renderLayout();
+                });
+            });
+
+            switchMode('star');
+        });
+    </script>
+</body>
+</html>
