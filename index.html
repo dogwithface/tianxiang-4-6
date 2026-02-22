@@ -219,7 +219,7 @@
         .palace.san-fang { background-color: #fff3e0; border: 2px solid #ffb74d; }
         .palace.si-zheng { background-color: #e3f2fd; border: 2px solid #64b5f6; }
         
-        /* 宮位名稱標籤 */
+        /* 宮位名稱標籤 (字體調大) */
         .palace-name {
             position: absolute; bottom: 5px; left: 5px;
             font-size: 0.8em; color: #fff;
@@ -227,17 +227,17 @@
             background-color: #7986cb;
             padding: 2px 6px; border-radius: 4px; z-index: 10;
         }
-        /* 命宮標籤放大並改為橘底 */
+        /* 命宮標籤放大並改為橘底 (字體調大) */
         .palace-name.is-minggong {
             font-size: 1.1em; 
             font-weight: bold;
             padding: 3px 8px;
             background-color: #ff8a65; 
         }
-        /* 地支標籤 */
+        /* 地支標籤 (字體調大) */
         .dz-label { position: absolute; bottom: 5px; right: 5px; font-size: 0.65em; color: #b0bec5; font-weight: normal; }
         
-        /* 星曜文字顏色 */
+        /* 星曜文字顏色 (字體調大) */
         .star-info-container {
             display: flex;
             flex-wrap: wrap; 
@@ -270,7 +270,7 @@
             border: 2px solid #D32F2F; /* 紅色實線框 */
         }
         
-        /* --- 四化標籤樣式 --- */
+        /* --- 四化標籤樣式 (字體調大) --- */
         .si-hua {
             font-size: 1.2em; 
             font-weight: bold;
@@ -300,85 +300,58 @@
             font-weight: bold; text-align: center; line-height: 1.5; z-index: 50;
         }
 
-        /* ====== 手機/平板優化 (當螢幕變窄時，佈局改為垂直堆疊並適應單螢幕高度) ====== */
+        /* ====== 手機/平板優化 (當螢幕變窄時，佈局改為垂直堆疊) ====== */
         @media (max-width: 900px) {
-            /* 讓整體網頁高度剛好等於螢幕高度，不出現捲動條 */
-            body { padding: 0; margin: 0; height: 100vh; height: 100dvh; overflow: hidden; }
-            .container { padding: 10px; width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; border-radius: 0; box-shadow: none; margin: 0; }
-            
-            /* 壓縮標題間距 */
-            h1 { font-size: 1.4em; margin-bottom: 5px; padding-bottom: 5px; flex: none; }
-            
-            /* 讓內容區利用 Flexbox 自動分配高度 */
-            .main-layout { flex-direction: column; gap: 5px; flex: 1; display: flex; min-height: 0; }
+            body { padding: 5px; }
+            .container { padding: 10px; width: 100%; box-sizing: border-box; }
+            h1 { font-size: 1.5em; margin-bottom: 15px; padding-bottom: 10px; }
+            .main-layout { flex-direction: column; gap: 10px; }
 
-            /* 將命盤區往上移，設定為自動縮放以填滿剩餘高度 */
+            /* 將命盤區往上移，設定順序為 1 */
             .board-area {
                 order: 1; 
                 width: 100%;
-                flex: 1; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                margin-bottom: 0;
-                min-height: 0;
+                margin-bottom: 20px;
             }
 
-            /* 控制命盤最大寬度不超過螢幕寬度與可用高度，避免破版 */
-            .zwdz-board { 
-                width: 100%; 
-                max-width: min(100%, 50vh); 
-                aspect-ratio: 1 / 1; 
-                height: auto;
-            }
-
-            /* 底部提示文字壓縮 (覆寫行內樣式) */
-            .board-area p { margin-top: 5px !important; margin-bottom: 0 !important; font-size: 0.9em !important; flex: none; }
-
-            /* 將控制區往下移，並壓縮按鈕間距 */
+            /* 將控制區往下移，設定順序為 2 */
             .controls {
                 order: 2;
                 width: 100%; flex: none; border-right: none;
                 border-bottom: none; 
                 border-top: 2px solid #f0f0f0; 
-                padding-right: 0; padding-top: 10px; padding-bottom: 5px; margin-top: 0; margin-bottom: 0;
+                padding-right: 0; padding-top: 25px; padding-bottom: 15px; margin-top: 0; margin-bottom: 10px;
                 box-sizing: border-box;
             }
 
-            #mode-switch { flex-direction: row; justify-content: center; gap: 8px; margin-bottom: 5px; }
-            #mode-switch button { padding: 8px; font-size: 1.05em; }
+            #mode-switch { flex-direction: row; justify-content: center; gap: 10px; }
+            .zwdz-board { width: 100%; max-width: 100%; }
 
-            .selector-group { padding: 5px; margin-top: 5px; }
-            h2 { margin: 2px 0 5px; font-size: 1em; }
-            #tiangan-select { padding: 4px; font-size: 0.95em; }
-            #overlay-toggle-btn { padding: 8px; font-size: 1em; }
-
-            /* 手機版按鈕改為兩排橫向排列 */
+            /* --- 修改: 手機版按鈕改為兩排橫向排列 --- */
             #ziwei-dz-buttons, #palace-buttons {
-                grid-template-columns: repeat(6, 1fr); 
-                grid-template-rows: auto auto;         
-                grid-template-areas: none;             
-                gap: 4px;
+                grid-template-columns: repeat(6, 1fr); /* 變成一排 6 個 */
+                grid-template-rows: auto auto;         /* 共 2 排 */
+                grid-template-areas: none;             /* 取消十二宮格的留空設定 */
+                gap: 5px;
             }
             
+            /* 強制解除各按鈕的獨立定位，讓它們自然按順序排列 */
             #ziwei-dz-buttons button[data-dz], #palace-buttons button[data-dz] {
                 grid-area: auto; 
-                aspect-ratio: auto; 
-                padding: 6px 0;    
+                aspect-ratio: auto; /* 取消強制正方形 */
+                padding: 10px 0;    /* 增加上下高度方便手指點擊 */
                 font-size: 0.95em;
             }
 
-            /* 星曜字體維持剛剛調整過的大字體 */
-            .palace { padding: 2px 2px; font-size: clamp(0.75rem, 3.2vw, 1.1em); } 
-            .star-info-container { font-size: 1.0em; margin-bottom: 2px; line-height: 1.1; }
+            /* 放大手機版星曜字體 (同步調大) */
+            .palace { padding: 3px 2px; font-size: clamp(0.75rem, 3.2vw, 1.1em); } 
+            .star-info-container { font-size: 1.0em; margin-bottom: 3px; line-height: 1.2; }
             .star-main { font-size: 1.3em; }
             .star-box { padding: 0px 2px; border-width: 1px; font-size: 1.05em;}
             .si-hua { font-size: 1.0em; padding: 1px 2px; margin-left: 2px; }
             .palace-name { font-size: 0.75em; padding: 1px 4px; bottom: 2px; left: 2px; }
             .palace-name.is-minggong { font-size: 0.95em; padding: 2px 5px; }
             .dz-label { font-size: 0.65em; bottom: 2px; right: 2px; }
-            #center-title { font-size: 1.2em; }
         }
     </style>
 </head>
