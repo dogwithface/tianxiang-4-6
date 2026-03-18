@@ -37,13 +37,7 @@
         }
         /* 標題 */
         h1 {
-            text-align: center;
-            color: #5e548e;
-            font-size: 2.2em;
-            margin-bottom: 30px;
-            font-weight: bold;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
+            display: none; /* 已依照指示隱藏原標題 */
         }
         h2 {
             font-size: 1.1em;
@@ -257,6 +251,7 @@
         .star-main, .star-assist { font-size: 1.25em; font-weight: bold; line-height: 1.1; color: #7e57c2; }
         .star-assist { color: #8d6e63; }
         .star-minor-aux { font-size: 0.95em; font-weight: bold; line-height: 1.1; color: #0288d1; }
+        .star-minor-bad { font-size: 0.95em; font-weight: bold; line-height: 1.1; color: #d32f2f; }
 
         /* --- 祿羊陀新樣式 (用框線突出) --- */
         .star-box {
@@ -381,7 +376,8 @@
             #tiangan-select { padding: 2px 4px; font-size: 0.9em; width: 100%; box-sizing: border-box; height: 26px;}
             
             #aux-star-selector { order: 4; }
-            #month-select, #hour-select { padding: 2px 4px; font-size: 0.9em; height: 26px;}
+            #aux-star-selector h2 { font-size: 0.75em; letter-spacing: -0.5px; white-space: nowrap; }
+            #month-select, #year-dz-select, #hour-select { padding: 0px 1px !important; font-size: 0.8em !important; height: 24px !important; letter-spacing: -0.5px;}
 
             #star-selector { order: 5; }
             #palace-selector { order: 6; }
@@ -404,22 +400,24 @@
 
             .controls > div:last-child { order: 7; padding-top: 2px !important; margin-top: 0 !important; font-size: 0.65em; }
 
-            /* 星曜字體維持調整過的大字體，但在小螢幕稍微縮放防爆版 */
-            .palace { padding: 1px 2px; font-size: clamp(0.7rem, 2.5vw, 1.1em); } 
-            .star-info-container { font-size: 0.95em; margin-bottom: 1px; line-height: 1.1; }
-            .star-main { font-size: 1.2em; }
-            .star-minor-aux { font-size: 0.95em; }
-            .star-box { padding: 0px 1px; border-width: 1px; font-size: 1.0em;}
-            .si-hua { font-size: 0.95em; padding: 0px 2px; margin-left: 1px; }
-            .palace-name { font-size: 0.75em; padding: 1px 3px; bottom: 1px; left: 1px; }
-            .palace-name.is-minggong { font-size: 0.9em; padding: 1px 4px; }
-            .dz-label { font-size: 1.1em; bottom: 1px; right: 1px; }
-            #center-title { font-size: 1.1em; }
+            /* 星曜字體維持調整過的大字體，但在小螢幕稍微縮放防爆版以容納更多副星 */
+            .palace { padding: 1px 1px; font-size: clamp(0.75rem, 2.8vw, 1.1em); } 
+            .star-info-container { font-size: 0.95em; margin-bottom: 0px; line-height: 1.05; }
+            .star-main { font-size: 1.35em; }
+            .star-minor-aux, .star-minor-bad { font-size: 1.1em; }
+            .star-box { padding: 0px 1px; border-width: 1px; font-size: 1.1em;}
+            .si-hua { font-size: 0.95em; padding: 0px 1px; margin-left: 1px; }
+            .palace-name { font-size: 0.7em; padding: 1px 2px; bottom: 1px; left: 1px; }
+            .palace-name.is-minggong { font-size: 0.85em; padding: 1px 3px; }
+            .dz-label { font-size: 1.0em; bottom: 1px; right: 1px; }
+            #center-title { font-size: 1.0em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1>紫微架構圖 原兆製作 6.5</h1>
+
         <div class="main-layout">
             <div class="controls">
                 <div id="mode-switch">
@@ -445,7 +443,7 @@
                 </div>
 
                 <div id="aux-star-selector" class="selector-group">
-                    <h2>生月與生時 (左右昌曲)</h2>
+                    <h2>生月與時系星 (左右/昌曲/空劫/火鈴)</h2>
                     <div style="display: flex; gap: 5px;">
                         <select id="month-select" style="flex: 1; padding: 6px; box-sizing: border-box; border-radius: 4px;">
                             <option value="">不顯示 左右</option>
@@ -462,8 +460,23 @@
                             <option value="11">十一月</option>
                             <option value="12">十二月</option>
                         </select>
+                        <select id="year-dz-select" style="flex: 1; padding: 6px; box-sizing: border-box; border-radius: 4px;">
+                            <option value="">年支(火鈴)</option>
+                            <option value="子">子年</option>
+                            <option value="丑">丑年</option>
+                            <option value="寅">寅年</option>
+                            <option value="卯">卯年</option>
+                            <option value="辰">辰年</option>
+                            <option value="巳">巳年</option>
+                            <option value="午">午年</option>
+                            <option value="未">未年</option>
+                            <option value="申">申年</option>
+                            <option value="酉">酉年</option>
+                            <option value="戌">戌年</option>
+                            <option value="亥">亥年</option>
+                        </select>
                         <select id="hour-select" style="flex: 1; padding: 6px; box-sizing: border-box; border-radius: 4px;">
-                            <option value="">不顯示 昌曲</option>
+                            <option value="">不顯示 時系</option>
                             <option value="子">子時</option>
                             <option value="丑">丑時</option>
                             <option value="寅">寅時</option>
@@ -544,10 +557,7 @@
             { name: '天相', tfOffset: 4, group: 'F', color: 'star-assist', desc: '服務' },
             { name: '天梁', tfOffset: 5, group: 'F', color: 'star-assist', desc: '蔭星' },
             { name: '七殺', tfOffset: 6, group: 'F', color: 'star-assist', desc: '開創' },
-            { name: '破軍', tfOffset: 10, group: 'F', color: 'star-assist', desc: '變化' },
-            { name: '文昌', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '科甲' },
-            { name: '文曲', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '藝文' },
-            { name: '右弼', fixedDz: null, group: 'Aux', color: 'star-assist', desc: '輔佐' }
+            { name: '破軍', tfOffset: 10, group: 'F', color: 'star-assist', desc: '變化' }
         ];
 
         // 四化表數據
@@ -577,6 +587,7 @@
             const palaceButtonsContainer = document.getElementById('palace-buttons');
             const tianganSelect = document.getElementById('tiangan-select');
             const monthSelect = document.getElementById('month-select');
+            const yearDzSelect = document.getElementById('year-dz-select');
             const hourSelect = document.getElementById('hour-select');
             const auxStarSelector = document.getElementById('aux-star-selector');
             const palaceElements = [
@@ -601,6 +612,7 @@
             let activeSanFangSiZhengDz = null;
             let activeTianGan = '';
             let activeMonth = '';
+            let activeYearDz = '';
             let activeHour = '';
 
             // 12 地支宮位列表 (用於按鈕創建)
@@ -687,7 +699,7 @@
                     layout[tuoPalaceId].push({ name: '陀羅', html: tuoHTML, isMain: false, type: 'Aux' });
                 }
 
-                // 3. 放置左右昌曲
+                // 3. 放置左右昌曲空劫火鈴
                 if (activeMonth) {
                     const monthIdx = parseInt(activeMonth) - 1; 
                     const zuoFuIdx = (4 + monthIdx) % 12; 
@@ -707,15 +719,47 @@
                     const hourIdx = dzToIdx[activeHour]; 
                     const wenQuIdx = (4 + hourIdx) % 12; 
                     const wenChangIdx = (10 - hourIdx + 12) % 12; 
+                    const diJieIdx = (11 + hourIdx) % 12;
+                    const diKongIdx = (11 - hourIdx + 12) % 12;
 
                     const wenQuId = 'p' + (wenQuIdx + 1);
                     const wenChangId = 'p' + (wenChangIdx + 1);
+                    const diJieId = 'p' + (diJieIdx + 1);
+                    const diKongId = 'p' + (diKongIdx + 1);
 
                     if (!layout[wenQuId]) { layout[wenQuId] = []; }
                     layout[wenQuId].push({ name: '文曲', html: `<div class="star-info-container"><span class="star-minor-aux" data-star="文曲" title="藝文">文曲</span></div>`, isMain: false, type: 'Aux' });
 
                     if (!layout[wenChangId]) { layout[wenChangId] = []; }
                     layout[wenChangId].push({ name: '文昌', html: `<div class="star-info-container"><span class="star-minor-aux" data-star="文昌" title="科甲">文昌</span></div>`, isMain: false, type: 'Aux' });
+
+                    if (!layout[diJieId]) { layout[diJieId] = []; }
+                    layout[diJieId].push({ name: '地劫', html: `<div class="star-info-container"><span class="star-minor-bad" data-star="地劫" title="空亡">地劫</span></div>`, isMain: false, type: 'Aux' });
+
+                    if (!layout[diKongId]) { layout[diKongId] = []; }
+                    layout[diKongId].push({ name: '地空', html: `<div class="star-info-container"><span class="star-minor-bad" data-star="地空" title="空亡">地空</span></div>`, isMain: false, type: 'Aux' });
+
+                    // 火星鈴星 (需搭配年支)
+                    if (activeYearDz) {
+                        let huoStart = -1, lingStart = -1;
+                        if (['寅', '午', '戌'].includes(activeYearDz)) { huoStart = 1; lingStart = 3; }
+                        else if (['申', '子', '辰'].includes(activeYearDz)) { huoStart = 2; lingStart = 10; }
+                        else if (['巳', '酉', '丑'].includes(activeYearDz)) { huoStart = 3; lingStart = 10; }
+                        else if (['亥', '卯', '未'].includes(activeYearDz)) { huoStart = 9; lingStart = 10; }
+
+                        if (huoStart !== -1) {
+                            const huoIdx = (huoStart + hourIdx) % 12;
+                            const lingIdx = (lingStart + hourIdx) % 12;
+                            const huoId = 'p' + (huoIdx + 1);
+                            const lingId = 'p' + (lingIdx + 1);
+
+                            if (!layout[huoId]) { layout[huoId] = []; }
+                            layout[huoId].push({ name: '火星', html: `<div class="star-info-container"><span class="star-minor-bad" data-star="火星" title="煞星">火星</span></div>`, isMain: false, type: 'Aux' });
+
+                            if (!layout[lingId]) { layout[lingId] = []; }
+                            layout[lingId].push({ name: '鈴星', html: `<div class="star-info-container"><span class="star-minor-bad" data-star="鈴星" title="煞星">鈴星</span></div>`, isMain: false, type: 'Aux' });
+                        }
+                    }
                 }
 
                 return layout;
@@ -877,9 +921,13 @@
                 renderLayout();
             });
 
-            // 月時選擇器事件監聽
+            // 月時與年支選擇器事件監聽
             monthSelect.addEventListener('change', function() {
                 activeMonth = this.value;
+                renderLayout();
+            });
+            yearDzSelect.addEventListener('change', function() {
+                activeYearDz = this.value;
                 renderLayout();
             });
             hourSelect.addEventListener('change', function() {
