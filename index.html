@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="天相排盤">
@@ -13,7 +14,7 @@
     <style>
         body {
             font-family: '微軟正黑體', 'Microsoft JhengHei', Arial, sans-serif;
-            background-color: #f0f4f8; /* 稍微加深底色突顯白色卡片 */
+            background-color: #f7f9fc;
             color: #444;
             margin: 0;
             padding: 20px;
@@ -24,35 +25,31 @@
             min-height: 100vh;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
         }
         .container {
             background-color: #fff;
             padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 95%;
             max-width: 1200px;
-            box-sizing: border-box;
         }
         h1 { display: none; }
         
         .main-layout {
             display: flex;
             flex-direction: row;
-            gap: 30px;
+            gap: 40px;
             align-items: stretch;
         }
-
         .controls {
             flex: 0 0 280px;
             display: flex;
             flex-direction: column;
             gap: 15px;
             border-right: 1px solid #f0f0f0;
-            padding-right: 25px;
+            padding-right: 30px;
         }
-
         .board-area {
             flex: 1;
             display: flex;
@@ -94,15 +91,13 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
         
-        /* 標題與下拉選單的共用橫列 */
         .card-header {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 10px; /* 讓標題與按鈕緊靠 */
             margin-bottom: 12px;
             width: 100%;
             font-size: 1.05em;
@@ -119,7 +114,6 @@
             background-color: white;
         }
 
-        /* 與標題整合的精緻開關按鈕 */
         .toggle-btn {
             background-color: #cfd8dc;
             color: #455a64;
@@ -200,9 +194,10 @@
             border: 2px solid #546e7a;
             position: relative;
             background-color: #fff;
+            box-sizing: border-box;
         }
         #line-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; grid-area: 1 / 1 / 5 / 5; z-index: 100; }
-        .sfz-line { position: absolute; background-color: transparent; border: none; border-top: 2px dashed rgba(255, 112, 67, 0.5); pointer-events: none; transform-origin: 0% 0%; }
+        .sfz-line { position: absolute; background-color: transparent; border: none; border-top: 2px dashed rgba(255, 112, 67, 0.6); pointer-events: none; transform-origin: 0% 0%; }
         
         .palace {
             border: 1px solid #cfd8dc; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;
@@ -247,8 +242,8 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            width: 90%;
-            max-width: 220px;
+            width: 95%;
+            max-width: 240px;
         }
         #tiangan-select {
             padding: 4px; border-radius: 6px; border: 1px solid #b0bec5; font-size: 0.9em; width: 100%; box-sizing: border-box;
@@ -256,7 +251,6 @@
         .three-selects {
             display: flex; gap: 3px; width: 100%; justify-content: space-between;
         }
-        /* 核心修復疊加：使用 min-width: 0 強制內縮不超出父元素 */
         .three-selects select {
             flex: 1; min-width: 0; padding: 3px 1px; font-size: 0.85em; border-radius: 6px; border: 1px solid #b0bec5; 
             text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
@@ -269,7 +263,6 @@
 
         @media (max-width: 900px) {
             body { 
-                /* 新增四周留白，不再緊貼邊緣 */
                 padding: 12px; 
                 height: 100vh;
                 height: 100dvh; 
@@ -284,7 +277,7 @@
                 flex-direction: column; 
                 margin: 0;
                 box-sizing: border-box;
-                border-radius: 12px; /* 恢復圓角卡片感 */
+                border-radius: 12px;
             }
             .main-layout { 
                 flex-direction: column; gap: 4px; height: 100%; overflow: hidden;
@@ -296,10 +289,11 @@
 
             .zwdz-board { 
                 width: 100%; 
-                max-width: 100vw;
-                max-height: 48vh; 
+                max-width: min(100%, 55vh); 
                 aspect-ratio: 1 / 1; 
-                height: auto; margin: 0 auto;
+                height: auto; 
+                margin: 0 auto;
+                box-sizing: border-box;
             }
 
             .controls {
@@ -310,12 +304,11 @@
             #mode-switch button { padding: 6px; font-size: 0.9em; }
 
             .selector-group {
-                padding: 6px; margin-bottom: 0; border-radius: 8px; gap: 2px;
+                padding: 6px; margin-bottom: 0; border-radius: 8px; gap: 2px; align-items: center;
             }
             
             .card-header { margin-bottom: 6px; font-size: 0.95em; }
 
-            /* 手機版：切換回 6列2行 矩陣排列 */
             #ziwei-dz-buttons, #palace-buttons {
                 display: grid;
                 grid-template-columns: repeat(6, 1fr) !important;
@@ -329,7 +322,6 @@
                 grid-area: auto !important; aspect-ratio: auto; padding: 6px 0; font-size: 0.9em;
             }
 
-            /* 中央選單字體進一步壓縮防止疊加 */
             .three-selects select { padding: 2px 0px; font-size: 0.72em; letter-spacing: -0.5px; }
 
             #center-console { padding: 1px; }
@@ -393,11 +385,10 @@
                     <div id="ziwei-dz-buttons"></div>
                 </div>
 
-                <!-- 2. 命宮所在與顯示按鈕合併 -->
+                <!-- 2. 命宮所在與切換顯示合併 -->
                 <div id="palace-selector-card" class="selector-group">
-                    <div class="card-header" style="justify-content: space-between; padding: 0 5px;">
+                    <div class="card-header">
                         <span>命宮 所在宮位</span>
-                        <!-- 合併到這裡的開關按鈕 -->
                         <button id="overlay-toggle-btn" class="toggle-btn">顯示命宮</button>
                     </div>
                     <div id="palace-buttons"></div>
@@ -445,10 +436,9 @@
                                 <option value="庚">庚年 (陽武同相)</option>
                                 <option value="辛">辛年 (巨陽昌曲)</option>
                                 <option value="壬">壬年 (梁紫左武)</option>
-                                <option value="癸">癸年 (破巨陰貪)</option>
+                                <option value="癸">癸年 (破巨巨貪)</option>
                             </select>
                             
-                            <!-- 三個選單，已修正疊加問題 -->
                             <div class="three-selects">
                                 <select id="month-select">
                                     <option value="">生月(左右)</option>
@@ -548,29 +538,37 @@
             const dzToIdx = dzMap.reduce((acc, dz, i) => { acc[dz] = i; return acc; }, {});
             const palaceOrder = ['命', '兄', '夫', '子', '財', '疾', '遷', '僕', '官', '田', '福', '父'];
 
-            const palaceCenters = {
-                'p1': { x: 62.5, y: 87.5 }, 'p2': { x: 37.5, y: 87.5 }, 'p3': { x: 12.5, y: 87.5 },
-                'p4': { x: 12.5, y: 62.5 }, 'p5': { x: 12.5, y: 37.5 }, 'p6': { x: 12.5, y: 12.5 },
-                'p7': { x: 37.5, y: 12.5 }, 'p8': { x: 62.5, y: 12.5 }, 'p9': { x: 87.5, y: 12.5 },
-                'p10':{ x: 87.5, y: 37.5 }, 'p11':{ x: 87.5, y: 62.5 }, 'p12':{ x: 87.5, y: 87.5 }
+            // 重新定義錨點：針對中央空白區的精準對齊點 (百分比)
+            const palaceAnchors = {
+                'p1':  { x: 62.5, y: 75 },   // 子：上方內緣中心
+                'p2':  { x: 37.5, y: 75 },   // 丑：上方內緣中心
+                'p3':  { x: 25,   y: 75 },   // 寅：右上內角
+                'p4':  { x: 25,   y: 62.5 }, // 卯：右側內緣中心
+                'p5':  { x: 25,   y: 37.5 }, // 辰：右側內緣中心
+                'p6':  { x: 25,   y: 25 },   // 巳：右下內角
+                'p7':  { x: 37.5, y: 25 },   // 午：下方內緣中心
+                'p8':  { x: 62.5, y: 25 },   // 未：下方內緣中心
+                'p9':  { x: 75,   y: 25 },   // 申：左下內角
+                'p10': { x: 75,   y: 37.5 }, // 酉：左側內緣中心
+                'p11': { x: 75,   y: 62.5 }, // 戌：左側內緣中心
+                'p12': { x: 75,   y: 75 }    // 亥：左上內角
             };
-            const HALF_PALACE_SIZE = 12.5;
 
             function drawLine(p1Id, p2Id, container) {
-                const c1 = palaceCenters[p1Id], c2 = palaceCenters[p2Id];
-                const dx = c2.x - c1.x, dy = c2.y - c1.y;
+                const c1 = palaceAnchors[p1Id]; 
+                const c2 = palaceAnchors[p2Id];
+                const dx = c2.x - c1.x; 
+                const dy = c2.y - c1.y;
                 const totalLength = Math.sqrt(dx * dx + dy * dy);
-                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-                const startX = c1.x + (dx / totalLength) * HALF_PALACE_SIZE;
-                const startY = c1.y + (dy / totalLength) * HALF_PALACE_SIZE;
-                const newLength = totalLength - (2 * HALF_PALACE_SIZE);
-                if (newLength <= 0) return;
+                if (totalLength <= 0) return;
                 
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
                 const line = document.createElement('div');
                 line.className = 'sfz-line';
-                line.style.width = `${newLength}%`;
-                line.style.left = `${startX}%`;
-                line.style.top = `${startY}%`;
+                // 100% 精準連接兩個座標，不需額外縮短長度
+                line.style.width = `${totalLength}%`;
+                line.style.left = `${c1.x}%`;
+                line.style.top = `${c1.y}%`;
                 line.style.transform = `rotate(${angle}deg)`;
                 container.appendChild(line);
             }
@@ -580,8 +578,11 @@
                 const selectedIdx = dzToIdx[dz];
                 const indices = [selectedIdx, (selectedIdx + 4) % 12, (selectedIdx - 4 + 12) % 12, (selectedIdx + 6) % 12];
                 const ids = indices.map(idx => 'p' + (idx + 1));
-                drawLine(ids[0], ids[1], container); drawLine(ids[1], ids[2], container);
-                drawLine(ids[2], ids[0], container); drawLine(ids[0], ids[3], container);
+                // 畫出四正的連線形成經典三角形與對角線
+                drawLine(ids[0], ids[1], container); 
+                drawLine(ids[1], ids[2], container);
+                drawLine(ids[2], ids[0], container); 
+                drawLine(ids[0], ids[3], container);
             }
 
             function calculateZiweiDzFromStar(starName, targetDz) {
