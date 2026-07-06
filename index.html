@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="天相排盤">
@@ -15,8 +14,8 @@
         /* 基礎樣式 */
         body {
             font-family: '微軟正黑體', 'Microsoft JhengHei', Arial, sans-serif;
-            background-color: #f7f9fc;
-            color: #444;
+            background-color: #f4f6f9;
+            color: #333;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -30,28 +29,36 @@
         .container {
             background-color: #fff;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             width: 95%;
             max-width: 1200px;
         }
         h1 { display: none; }
-        
-        /* ====== 佈局容器 ====== */
+        h2 {
+            font-size: 1.1em;
+            color: #546e7a;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        /* 佈局容器 */
         .main-layout {
             display: flex;
             flex-direction: row;
-            gap: 40px;
+            gap: 30px;
             align-items: stretch;
         }
+
+        /* 左側控制區 */
         .controls {
             flex: 0 0 280px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            border-right: 1px solid #f0f0f0;
-            padding-right: 30px;
         }
+
+        /* 右側命盤區 */
         .board-area {
             flex: 1;
             display: flex;
@@ -65,93 +72,47 @@
             display: flex;
             flex-direction: row;
             gap: 10px;
-            margin-bottom: 5px;
         }
         #mode-switch button {
-            background-color: #90a4ae;
+            flex: 1;
+            background-color: #78909c;
             color: white;
             border: none;
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.05em;
-            transition: all 0.3s ease;
-            width: 100%;
-            letter-spacing: 1px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.2s ease;
         }
-        #mode-switch button:hover { background-color: #78909c; }
+        #mode-switch button:hover { background-color: #607d8b; }
         #mode-switch button.active {
-            background-color: #546e7a;
-            font-weight: bold;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* 控制卡片區塊 */
-        .selector-group {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px; /* 讓標題與按鈕緊靠 */
-            margin-bottom: 12px;
-            width: 100%;
-            font-size: 1.05em;
-            font-weight: bold;
-            color: #546e7a;
-        }
-        .star-select {
-            padding: 4px 8px;
-            font-size: 1em;
-            border-radius: 6px;
-            border: 1px solid #b0bec5;
-            font-weight: bold;
-            color: #546e7a;
-            background-color: white;
-        }
-
-        /* 開關按鈕 (命宮顯示) */
-        .toggle-btn {
-            background-color: #cfd8dc;
-            color: #455a64;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .toggle-btn.active {
-            background-color: #4CAF55;
-            color: white;
+            background-color: #37474f;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* 4x4 環狀按鈕佈局 */
-        #ziwei-dz-buttons, #palace-buttons {
+        /* 控制卡片 */
+        .control-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        /* 4x4 環狀按鈕網格佈局 */
+        .dz-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            width: 100%;
+            gap: 5px;
             grid-template-areas:
                 "p6 p7 p8 p9"
                 "p5 . . p10"
                 "p4 . . p11"
                 "p3 p2 p1 p12";
         }
-
+        
         .palace-btn {
             background-color: #cfd8dc;
             color: #455a64;
@@ -159,10 +120,11 @@
             padding: 0;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.05em;
+            font-size: 1.1em;
+            font-weight: bold;
             transition: all 0.2s;
             width: 100%;
-            aspect-ratio: 1 / 1; 
+            aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -171,308 +133,252 @@
         .palace-btn.active {
             background-color: #ff8a65;
             color: white;
-            font-weight: bold;
-            transform: scale(1.05);
             box-shadow: 0 2px 5px rgba(255, 138, 101, 0.4);
         }
 
-        #ziwei-dz-buttons button[data-dz="巳"], #palace-buttons button[data-dz="巳"] { grid-area: p6; }
-        #ziwei-dz-buttons button[data-dz="午"], #palace-buttons button[data-dz="午"] { grid-area: p7; }
-        #ziwei-dz-buttons button[data-dz="未"], #palace-buttons button[data-dz="未"] { grid-area: p8; }
-        #ziwei-dz-buttons button[data-dz="申"], #palace-buttons button[data-dz="申"] { grid-area: p9; }
-        #ziwei-dz-buttons button[data-dz="辰"], #palace-buttons button[data-dz="辰"] { grid-area: p5; }
-        #ziwei-dz-buttons button[data-dz="酉"], #palace-buttons button[data-dz="酉"] { grid-area: p10; }
-        #ziwei-dz-buttons button[data-dz="卯"], #palace-buttons button[data-dz="卯"] { grid-area: p4; }
-        #ziwei-dz-buttons button[data-dz="戌"], #palace-buttons button[data-dz="戌"] { grid-area: p11; }
-        #ziwei-dz-buttons button[data-dz="寅"], #palace-buttons button[data-dz="寅"] { grid-area: p3; }
-        #ziwei-dz-buttons button[data-dz="丑"], #palace-buttons button[data-dz="丑"] { grid-area: p2; }
-        #ziwei-dz-buttons button[data-dz="子"], #palace-buttons button[data-dz="子"] { grid-area: p1; }
-        #ziwei-dz-buttons button[data-dz="亥"], #palace-buttons button[data-dz="亥"] { grid-area: p12; }
+        /* 網格區域分配 */
+        .btn-dz-巳 { grid-area: p6; } .btn-dz-午 { grid-area: p7; } .btn-dz-未 { grid-area: p8; } .btn-dz-申 { grid-area: p9; }
+        .btn-dz-辰 { grid-area: p5; } .btn-dz-酉 { grid-area: p10; }
+        .btn-dz-卯 { grid-area: p4; } .btn-dz-戌 { grid-area: p11; }
+        .btn-dz-寅 { grid-area: p3; } .btn-dz-丑 { grid-area: p2; } .btn-dz-子 { grid-area: p1; } .btn-dz-亥 { grid-area: p12; }
 
-        /* ====== 命盤區域 ====== */
+        /* --- 盤面樣式 --- */
         .zwdz-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
             width: 100%;
-            max-width: 700px;
+            max-width: 750px;
             aspect-ratio: 1 / 1;
-            margin: 0 auto;
             border: 2px solid #546e7a;
             position: relative;
             background-color: #fff;
-            box-sizing: border-box;
         }
-        #line-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; grid-area: 1 / 1 / 5 / 5; z-index: 100; }
-        .sfz-line { position: absolute; background-color: transparent; border: none; border-top: 2px dashed rgba(255, 112, 67, 0.6); pointer-events: none; transform-origin: 0% 0%; }
         
+        #line-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            pointer-events: none; grid-area: 1 / 1 / 5 / 5; z-index: 100; 
+        }
+        
+        .sfz-line {
+            position: absolute; 
+            border-top: 2px dashed rgba(233, 30, 99, 0.6);
+            pointer-events: none; 
+            transform-origin: 0% 0%;
+        }
+
         .palace {
-            border: 1px solid #cfd8dc; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;
-            background-color: #fafdff; padding: 5px; line-height: 1.2; position: relative; cursor: pointer; transition: background-color 0.2s;
+            border: 1px solid #cfd8dc;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: #fafdff;
+            padding: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            overflow: hidden;
         }
         .palace:hover { background-color: #f0f7fa; }
+        
         .palace.san-fang { background-color: #fff3e0; border: 2px solid #ffb74d; }
         .palace.si-zheng { background-color: #e3f2fd; border: 2px solid #64b5f6; }
-        
-        /* 宮位名稱 (大字體版) */
-        .palace-name { position: absolute; bottom: 5px; left: 5px; font-size: 1.2em; color: #fff; background-color: #7986cb; padding: 3px 6px; border-radius: 4px; z-index: 10; font-weight: bold;}
-        .palace-name.is-minggong { font-size: 1.45em; font-weight: bold; padding: 3px 8px; background-color: #ff8a65; }
-        .dz-label { position: absolute; bottom: 5px; right: 5px; font-size: 1.5em; color: #b0bec5; font-weight: bold;}
-        
-        .star-info-container { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 2px; font-size: 1em; line-height: 1.1; }
-        .star-main, .star-assist { font-size: 1.45em; font-weight: bold; line-height: 1.1; color: #7e57c2; }
-        .star-assist { color: #8d6e63; }
-        .star-minor-aux { font-size: 1.15em; font-weight: bold; color: #0288d1; }
-        .star-minor-bad { font-size: 1.15em; font-weight: bold; color: #d32f2f; }
-        .star-box { padding: 1px 3px; border-radius: 4px; margin: 0 2px; font-weight: bold; display: inline-block; font-size: 1.2em; }
-        .star-box.luchun { color: #4CAF55; border: 1px solid #4CAF55; }
-        .star-box.yangtuo { color: #D32F2F; border: 1px solid #D32F2F; }
-        .si-hua { font-size: 1.3em; font-weight: bold; padding: 1px 4px; border-radius: 4px; margin-left: 5px; color: white !important; display: inline-block; line-height: 1.1;}
-        .si-hua.huaji { background-color: #D32F2F; }     
-        .si-hua.hualu, .si-hua.huaquan, .si-hua.huake { background-color: #4CAF55; } 
 
-        /* ====== 中央控制面板 ====== */
-        #center-console {
+        /* 字體放大區 */
+        .palace-name {
+            position: absolute; bottom: 5px; left: 5px;
+            font-size: 1.1em; color: #fff;
+            font-weight: bold;
+            background-color: #7986cb;
+            padding: 2px 6px; border-radius: 4px; z-index: 10;
+        }
+        .palace-name.is-minggong {
+            font-size: 1.3em;
+            background-color: #ff8a65;
+        }
+        .dz-label { 
+            position: absolute; bottom: 5px; right: 5px; 
+            font-size: 1.4em; color: #90a4ae; font-weight: bold; 
+        }
+
+        .star-info-container {
+            display: flex; flex-wrap: wrap; align-items: center;
+            margin-bottom: 2px; line-height: 1.15;
+        }
+        .star-main { font-size: 1.45em; font-weight: bold; color: #673ab7; }
+        .star-assist { font-size: 1.45em; font-weight: bold; color: #795548; }
+        .star-minor-aux { font-size: 1.1em; font-weight: bold; color: #0288d1; }
+        .star-minor-bad { font-size: 1.1em; font-weight: bold; color: #d32f2f; }
+
+        .star-box {
+            padding: 1px 3px; border-radius: 4px; margin: 0 2px;
+            font-weight: bold; display: inline-block; font-size: 1.25em;
+        }
+        .star-box.luchun { color: #4CAF55; border: 2px solid #4CAF55; }
+        .star-box.yangtuo { color: #D32F2F; border: 2px solid #D32F2F; }
+
+        .si-hua {
+            font-size: 1.2em; font-weight: bold; padding: 1px 4px;
+            border-radius: 4px; margin-left: 5px; vertical-align: middle;
+            color: white !important;
+        }
+        .si-hua.huaji { background-color: #D32F2F; }
+        .si-hua.hualu, .si-hua.huaquan, .si-hua.huake { background-color: #4CAF55; }
+
+        /* 中央控制區 */
+        #center-control-panel {
             grid-area: 2 / 2 / 4 / 4;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            padding: 5px;
-            text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 50; padding: 10px; text-align: center;
         }
         
-        .version-title { font-size: 1.2em; color: #4a148c; font-weight: bold; line-height: 1.1; }
-        .author-tag { font-size: 0.65em; color: #7e57c2; font-weight: normal; display: block; margin-top: 2px;}
-        .center-subtitle { font-size: 0.95em; color: #5e548e; margin: 6px 0; font-weight: bold; line-height: 1.3;}
-        
-        #star-mode-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 95%;
-            max-width: 240px;
+        .main-select, .sub-select {
+            padding: 6px; border-radius: 6px; border: 1px solid #b0bec5;
+            background-color: white; font-size: 0.95em; color: #37474f; font-weight: bold;
         }
-        #tiangan-select {
-            padding: 4px; border-radius: 6px; border: 1px solid #b0bec5; font-size: 0.9em; width: 100%; box-sizing: border-box;
-        }
-        .three-selects {
-            display: flex; gap: 3px; width: 100%; justify-content: space-between;
-        }
-        .three-selects select {
-            flex: 1; min-width: 0; padding: 3px 1px; font-size: 0.85em; border-radius: 6px; border: 1px solid #b0bec5; 
-            text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
-        }
+        .main-select { width: 100%; margin-bottom: 8px; }
+        .sub-select-group { display: flex; gap: 5px; width: 100%; }
+        .sub-select-group select { flex: 1; min-width: 0; } /* 防止爆框 */
 
-        #p1 { grid-area: 4 / 3 / 5 / 4; } #p2 { grid-area: 4 / 2 / 5 / 3; } #p3 { grid-area: 4 / 1 / 5 / 2; }
-        #p4 { grid-area: 3 / 1 / 4 / 2; } #p5 { grid-area: 2 / 1 / 3 / 2; } #p6 { grid-area: 1 / 1 / 2 / 2; }
-        #p7 { grid-area: 1 / 2 / 2 / 3; } #p8 { grid-area: 1 / 3 / 2 / 4; } #p9 { grid-area: 1 / 4 / 2 / 5; }
-        #p10{ grid-area: 2 / 4 / 3 / 5; } #p11{ grid-area: 3 / 4 / 4 / 5; } #p12{ grid-area: 4 / 4 / 5 / 5; }
+        /* 開關按鈕樣式 */
+        .switch {
+            position: relative; display: inline-block; width: 44px; height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s;
+        }
+        input:checked + .slider { background-color: #4CAF55; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .slider.round { border-radius: 24px; }
+        .slider.round:before { border-radius: 50%; }
 
-        /* ====== 手機版優化 ====== */
+        /* 定位 */
+        #p1 { grid-area: 4/3/5/4; } #p2 { grid-area: 4/2/5/3; } #p3 { grid-area: 4/1/5/2; }
+        #p4 { grid-area: 3/1/4/2; } #p5 { grid-area: 2/1/3/2; } #p6 { grid-area: 1/1/2/2; }
+        #p7 { grid-area: 1/2/2/3; } #p8 { grid-area: 1/3/2/4; } #p9 { grid-area: 1/4/2/5; }
+        #p10 { grid-area: 2/4/3/5; } #p11 { grid-area: 3/4/4/5; } #p12 { grid-area: 4/4/5/5; }
+
+        /* 手機版優化 */
         @media (max-width: 900px) {
-            body { 
-                padding: 12px; 
-                height: 100vh;
-                height: 100dvh; 
-                overflow: hidden; 
-                box-sizing: border-box;
-            }
-            .container { 
-                padding: 8px; 
-                width: 100%; 
-                height: 100%;
-                display: flex; 
-                flex-direction: column; 
-                margin: 0;
-                box-sizing: border-box;
-                border-radius: 12px;
-            }
-            .main-layout { 
-                flex-direction: column; gap: 4px; height: 100%; overflow: hidden;
-            }
-
-            .board-area {
-                order: 1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none;
-            }
-
-            .zwdz-board { 
-                width: 100%; 
-                max-width: min(100%, 55vh); 
-                aspect-ratio: 1 / 1; 
-                height: auto; 
-                margin: 0 auto;
-                box-sizing: border-box;
-            }
-
-            .controls {
-                order: 2; width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 4px; padding-right: 0; border-right: none; overflow: hidden;
-            }
-
-            #mode-switch { flex-direction: row; gap: 4px; margin-bottom: 2px; }
-            #mode-switch button { padding: 6px; font-size: 0.9em; }
-
-            .selector-group {
-                padding: 6px; margin-bottom: 0; border-radius: 8px; gap: 2px; align-items: center;
-            }
+            body { padding: 10px; background-color: #e2e8f0; }
+            .container { padding: 15px; width: 100%; box-sizing: border-box; }
+            .main-layout { flex-direction: column; gap: 15px; }
+            .controls { flex: none; width: 100%; order: 2; gap: 10px; }
+            .board-area { order: 1; width: 100%; }
+            .zwdz-board { max-width: min(100%, 55vh); } /* 防止左右被裁切 */
             
-            .card-header { margin-bottom: 6px; font-size: 0.95em; }
-
-            /* 手機版改回兩排排列節省空間 */
-            #ziwei-dz-buttons, #palace-buttons {
-                display: grid;
-                grid-template-columns: repeat(6, 1fr) !important;
-                grid-template-rows: repeat(2, 1fr) !important;
-                grid-template-areas: none !important; 
-                gap: 3px;
-                width: 100%;
+            .dz-grid {
+                grid-template-columns: repeat(6, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                grid-template-areas: none;
+                gap: 4px;
             }
-
-            #ziwei-dz-buttons button[data-dz], #palace-buttons button[data-dz] {
-                grid-area: auto !important; aspect-ratio: auto; padding: 6px 0; font-size: 0.9em;
-            }
-
-            .three-selects select { padding: 2px 0px; font-size: 0.72em; letter-spacing: -0.5px; }
-
-            #center-console { padding: 1px; }
-            .version-title { font-size: 1.05em; margin-bottom: 0px; }
-            .author-tag { font-size: 0.6em; margin-top: 1px; }
-            .center-subtitle { font-size: 0.8em; margin: 3px 0;}
-            #star-mode-controls { width: 95%; max-width: none; gap: 3px; }
-            #tiangan-select { padding: 2px; font-size: 0.8em; }
-
-            /* 手機版字體大幅放大 */
-            .palace { padding: 1px; font-size: clamp(0.8rem, 2.8vw, 1.2em); } 
-            .star-info-container { font-size: 1em; margin-bottom: 0px; }
-            .star-main { font-size: 1.4em; }
-            .star-minor-aux, .star-minor-bad { font-size: 1.15em; }
-            .star-box { padding: 0px 1px; font-size: 1.15em;}
-            .si-hua { font-size: 1.0em; padding: 0px 1px; margin-left: 1px; }
+            .dz-grid > button { grid-area: auto; aspect-ratio: auto; padding: 10px 0; font-size: 1.1em; }
             
-            /* 宮位標籤手機大字版 */
-            .palace-name { font-size: 1.15em; padding: 2px 4px; bottom: 1px; left: 1px; font-weight: bold; }
-            .palace-name.is-minggong { font-size: 1.35em !important; font-weight: 900; padding: 2px 4px; }
-            .dz-label { font-size: 1.1em; bottom: 1px; right: 1px; font-weight: bold;}
+            #center-control-panel { padding: 5px; }
+            .main-select, .sub-select { font-size: 0.85em; padding: 4px; }
+            .palace { padding: 4px; }
             
-            .controls > div.author-info { display: none; }
+            /* 手機版字體放大 */
+            .star-main, .star-assist { font-size: 1.35em; }
+            .star-box { font-size: 1.15em; border-width: 1px; }
+            .si-hua { font-size: 1em; padding: 1px 3px; margin-left: 2px; }
+            .palace-name { font-size: 0.95em; padding: 2px 4px; }
+            .palace-name.is-minggong { font-size: 1.1em; }
+            .dz-label { font-size: 1.2em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>紫微架構圖</h1>
-
         <div class="main-layout">
+            
+            <!-- 左側控制區 -->
             <div class="controls">
                 <div id="mode-switch">
                     <button id="star-mode-btn" class="active">星曜架構</button>
                     <button id="palace-mode-btn">十二宮位</button>
                 </div>
 
-                <!-- 1. 十四主星落宮選擇 -->
-                <div id="star-selector-card" class="selector-group">
-                    <div class="card-header">
-                        <select id="target-star-select" class="star-select">
-                            <optgroup label="紫微系">
-                                <option value="紫微">紫微星</option>
-                                <option value="天機">天機星</option>
-                                <option value="太陽">太陽星</option>
-                                <option value="武曲">武曲星</option>
-                                <option value="天同">天同星</option>
-                                <option value="廉貞">廉貞星</option>
-                            </optgroup>
-                            <optgroup label="天府系">
-                                <option value="天府">天府星</option>
-                                <option value="太陰">太陰星</option>
-                                <option value="貪狼">貪狼星</option>
-                                <option value="巨門">巨門星</option>
-                                <option value="天相">天相星</option>
-                                <option value="天梁">天梁星</option>
-                                <option value="七殺">七殺星</option>
-                                <option value="破軍">破軍星</option>
-                            </optgroup>
+                <!-- 星曜落宮選擇卡片 -->
+                <div class="control-card" id="star-selector-card">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <select id="main-star-select" style="padding: 4px 8px; font-size: 1.1em; font-weight: bold; border-radius: 6px; border: 1px solid #b0bec5; cursor: pointer;">
+                            <option value="紫微">紫微星</option><option value="天機">天機星</option>
+                            <option value="太陽">太陽星</option><option value="武曲">武曲星</option>
+                            <option value="天同">天同星</option><option value="廉貞">廉貞星</option>
+                            <option value="天府">天府星</option><option value="太陰">太陰星</option>
+                            <option value="貪狼">貪狼星</option><option value="巨門">巨門星</option>
+                            <option value="天相">天相星</option><option value="天梁">天梁星</option>
+                            <option value="七殺">七殺星</option><option value="破軍">破軍星</option>
                         </select>
-                        <span>落宮</span>
+                        <h2 style="margin: 0;">落宮</h2>
                     </div>
-                    <div id="ziwei-dz-buttons"></div>
+                    <div class="dz-grid" id="star-dz-buttons"></div>
                 </div>
 
-                <!-- 2. 命宮所在與切換顯示合併 -->
-                <div id="palace-selector-card" class="selector-group">
-                    <div class="card-header">
-                        <span>命宮 所在宮位</span>
-                        <button id="overlay-toggle-btn" class="toggle-btn">顯示命宮</button>
+                <!-- 命宮所在選擇卡片 -->
+                <div class="control-card" id="palace-selector-card">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h2 style="margin: 0;">命宮 所在宮位</h2>
+                            <label class="switch" id="overlay-switch-container">
+                                <input type="checkbox" id="overlay-toggle-btn">
+                                <span class="slider round"></span>
+                            </label>
+                            <span id="overlay-switch-label" style="font-size: 0.85em; color: #6c757d; font-weight: bold;">顯示命宮</span>
+                        </div>
                     </div>
-                    <div id="palace-buttons"></div>
+                    <div class="dz-grid" id="palace-dz-buttons"></div>
                 </div>
                 
-                <div class="author-info" style="text-align: center; font-size: 0.75em; color: #b0bec5; margin-top: auto;">
-                    @andyxfbi 製作
-                </div>
+                <div style="text-align: center; font-size: 0.75em; color: #b0bec5; margin-top: auto;">@andyxfbi 製作</div>
             </div>
 
+            <!-- 右側命盤區 -->
             <div class="board-area">
                 <div class="zwdz-board">
-                    <div class="palace" id="p1" data-dz="子"></div>
-                    <div class="palace" id="p2" data-dz="丑"></div>
-                    <div class="palace" id="p3" data-dz="寅"></div>
-                    <div class="palace" id="p4" data-dz="卯"></div>
-                    <div class="palace" id="p5" data-dz="辰"></div>
-                    <div class="palace" id="p6" data-dz="巳"></div>
-                    <div class="palace" id="p7" data-dz="午"></div>
-                    <div class="palace" id="p8" data-dz="未"></div>
-                    <div class="palace" id="p9" data-dz="申"></div>
-                    <div class="palace" id="p10" data-dz="酉"></div>
-                    <div class="palace" id="p11" data-dz="戌"></div>
-                    <div class="palace" id="p12" data-dz="亥"></div>
+                    <div class="palace" id="p1" data-dz="子"></div><div class="palace" id="p2" data-dz="丑"></div>
+                    <div class="palace" id="p3" data-dz="寅"></div><div class="palace" id="p4" data-dz="卯"></div>
+                    <div class="palace" id="p5" data-dz="辰"></div><div class="palace" id="p6" data-dz="巳"></div>
+                    <div class="palace" id="p7" data-dz="午"></div><div class="palace" id="p8" data-dz="未"></div>
+                    <div class="palace" id="p9" data-dz="申"></div><div class="palace" id="p10" data-dz="酉"></div>
+                    <div class="palace" id="p11" data-dz="戌"></div><div class="palace" id="p12" data-dz="亥"></div>
 
                     <div id="line-overlay"></div>
 
-                    <!-- 中央控制台 -->
-                    <div id="center-console">
-                        <div class="version-title">
-                            紫微架構圖
-                            <span class="author-tag">原兆製作 7.1</span>
-                        </div>
-                        <div id="center-subtitle" class="center-subtitle"></div>
+                    <!-- 中央 2x2 控制面板 -->
+                    <div id="center-control-panel">
+                        <div style="font-size: 1.25em; color: #4a148c; font-weight: bold; line-height: 1.2;">紫微架構圖 <span style="font-size: 0.6em; color: #7e57c2; font-weight: normal;">原兆製作 7.1</span></div>
+                        <div id="center-info-text" style="font-size: 0.85em; color: #5e548e; margin: 5px 0 10px 0; font-weight: bold;"></div>
                         
-                        <div id="star-mode-controls">
-                            <select id="tiangan-select">
+                        <div id="center-selectors" style="width: 100%; max-width: 240px;">
+                            <select id="tiangan-select" class="main-select">
                                 <option value="">流年天干 (不顯四化)</option>
-                                <option value="甲">甲年 (廉破武陽)</option>
-                                <option value="乙">乙年 (機梁紫陰)</option>
-                                <option value="丙">丙年 (同機昌廉)</option>
-                                <option value="丁">丁年 (陰同機巨)</option>
-                                <option value="戊">戊年 (貪陰右機)</option>
-                                <option value="己">己年 (武貪梁曲)</option>
+                                <option value="甲">甲年 (廉破曲陽)</option><option value="乙">乙年 (機梁紫陰)</option>
+                                <option value="丙">丙年 (同機昌廉)</option><option value="丁">丁年 (陰同機巨)</option>
+                                <option value="戊">戊年 (貪陰右機)</option><option value="己">己年 (武貪梁曲)</option>
                                 <option value="庚">庚年 (陽武同相)</option>
-                                <option value="辛">辛年 (巨陽昌曲)</option>
-                                <option value="壬">壬年 (梁紫左武)</option>
-                                <option value="癸">癸年 (破巨巨貪)</option>
+                                <option value="辛">辛年 (巨陽武昌)</option> <!-- 修正處 -->
+                                <option value="壬">壬年 (梁紫府武)</option>
+                                <option value="癸">癸年 (破巨陰貪)</option>
                             </select>
-                            
-                            <div class="three-selects">
-                                <select id="month-select">
-                                    <option value="">生月(左右)</option>
-                                    <option value="1">正月</option><option value="2">二月</option><option value="3">三月</option>
-                                    <option value="4">四月</option><option value="5">五月</option><option value="6">六月</option>
-                                    <option value="7">七月</option><option value="8">八月</option><option value="9">九月</option>
-                                    <option value="10">十月</option><option value="11">十一月</option><option value="12">十二月</option>
+                            <div class="sub-select-group">
+                                <select id="month-select" class="sub-select">
+                                    <option value="">生月(左右)</option><option value="1">一月</option><option value="2">二月</option><option value="3">三月</option><option value="4">四月</option><option value="5">五月</option><option value="6">六月</option><option value="7">七月</option><option value="8">八月</option><option value="9">九月</option><option value="10">十月</option><option value="11">十一</option><option value="12">十二</option>
                                 </select>
-                                <select id="year-dz-select">
-                                    <option value="">年支(火鈴)</option>
-                                    <option value="子">子年</option><option value="丑">丑年</option><option value="寅">寅年</option>
-                                    <option value="卯">卯年</option><option value="辰">辰年</option><option value="巳">巳年</option>
-                                    <option value="午">午年</option><option value="未">未年</option><option value="申">申年</option>
-                                    <option value="酉">酉年</option><option value="戌">戌年</option><option value="亥">亥年</option>
+                                <select id="year-dz-select" class="sub-select">
+                                    <option value="">年支(火鈴)</option><option value="子">子年</option><option value="丑">丑年</option><option value="寅">寅年</option><option value="卯">卯年</option><option value="辰">辰年</option><option value="巳">巳年</option><option value="午">午年</option><option value="未">未年</option><option value="申">申年</option><option value="酉">酉年</option><option value="戌">戌年</option><option value="亥">亥年</option>
                                 </select>
-                                <select id="hour-select">
-                                    <option value="">時系(昌曲)</option>
-                                    <option value="子">子時</option><option value="丑">丑時</option><option value="寅">寅時</option>
-                                    <option value="卯">卯時</option><option value="辰">辰時</option><option value="巳">巳時</option>
-                                    <option value="午">午時</option><option value="未">未時</option><option value="申">申時</option>
-                                    <option value="酉">酉時</option><option value="戌">戌時</option><option value="亥">亥時</option>
+                                <select id="hour-select" class="sub-select">
+                                    <option value="">時系(昌曲)</option><option value="子">子時</option><option value="丑">丑時</option><option value="寅">寅時</option><option value="卯">卯時</option><option value="辰">辰時</option><option value="巳">巳時</option><option value="午">午時</option><option value="未">未時</option><option value="申">申時</option><option value="酉">酉時</option><option value="戌">戌時</option><option value="亥">亥時</option>
                                 </select>
                             </div>
                         </div>
@@ -483,6 +389,7 @@
     </div>
 
     <script>
+        // 核心星曜數據結構 
         const starPlacement = [
             { name: '紫微', delta: 0, group: 'Z', color: 'star-main' },
             { name: '天機', delta: 11, group: 'Z', color: 'star-main' },
@@ -500,19 +407,21 @@
             { name: '破軍', tfOffset: 10, group: 'F', color: 'star-assist' }
         ];
 
+        // 四化表數據 (辛年已修正為巨陽武昌)
         const siHuaTable = {
-            '甲': { '廉貞': '祿', '破軍': '權', '武曲': '科', '太陽': '忌' },
+            '甲': { '廉貞': '祿', '破軍': '權', '文曲': '科', '太陽': '忌' },
             '乙': { '天機': '祿', '天梁': '權', '紫微': '科', '太陰': '忌' },
             '丙': { '天同': '祿', '天機': '權', '文昌': '科', '廉貞': '忌' },
             '丁': { '太陰': '祿', '天同': '權', '天機': '科', '巨門': '忌' },
             '戊': { '貪狼': '祿', '太陰': '權', '右弼': '科', '天機': '忌' },
             '己': { '武曲': '祿', '貪狼': '權', '天梁': '科', '文曲': '忌' },
-            '庚': { '太陽': '祿', '武曲': '權', '天同': '科', '天相': '忌' }, 
-            '辛': { '巨門': '祿', '太陽': '權', '文昌': '科', '文曲': '忌' },
-            '壬': { '天梁': '祿', '紫微': '權', '左輔': '科', '武曲': '忌' },
+            '庚': { '太陽': '祿', '武曲': '權', '天同': '科', '天相': '忌' },
+            '辛': { '巨門': '祿', '太陽': '權', '武曲': '科', '文昌': '忌' }, 
+            '壬': { '天梁': '祿', '紫微': '權', '天府': '科', '武曲': '忌' },
             '癸': { '破軍': '祿', '巨門': '權', '太陰': '科', '貪狼': '忌' }
         };
 
+        // 祿羊陀排列表
         const luYangTuoTable = {
             '甲': ['寅', '卯', '丑'], '乙': ['卯', '辰', '寅'], '丙': ['巳', '午', '辰'],
             '丁': ['午', '未', '巳'], '戊': ['巳', '午', '辰'], '己': ['午', '未', '巳'],
@@ -520,10 +429,23 @@
             '癸': ['子', '丑', '亥']
         };
 
+        // 三方四正 連線內部錨點 (對齊中央2x2空洞邊緣)
+        const innerAnchors = {
+            'p1': {x: 62.5, y: 75}, 'p2': {x: 37.5, y: 75}, 'p3': {x: 25, y: 75},
+            'p4': {x: 25, y: 62.5}, 'p5': {x: 25, y: 37.5}, 'p6': {x: 25, y: 25},
+            'p7': {x: 37.5, y: 25}, 'p8': {x: 62.5, y: 25}, 'p9': {x: 75, y: 25},
+            'p10': {x: 75, y: 37.5}, 'p11': {x: 75, y: 62.5}, 'p12': {x: 75, y: 75}
+        };
+
+        const dzMap = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        const dzToIdx = dzMap.reduce((acc, dz, index) => { acc[dz] = index; return acc; }, {});
+        const palaceOrder = ['命', '兄', '夫', '子', '財', '疾', '遷', '僕', '官', '田', '福', '父'];
+
         document.addEventListener('DOMContentLoaded', () => {
-            const ziweiDzButtonsContainer = document.getElementById('ziwei-dz-buttons');
-            const palaceButtonsContainer = document.getElementById('palace-buttons');
-            const targetStarSelect = document.getElementById('target-star-select');
+            const starDzBtnsContainer = document.getElementById('star-dz-buttons');
+            const palaceDzBtnsContainer = document.getElementById('palace-dz-buttons');
+            const mainStarSelect = document.getElementById('main-star-select');
+            
             const tianganSelect = document.getElementById('tiangan-select');
             const monthSelect = document.getElementById('month-select');
             const yearDzSelect = document.getElementById('year-dz-select');
@@ -531,54 +453,34 @@
             
             const palaceElements = Array.from({length: 12}, (_, i) => document.getElementById(`p${i+1}`));
             const lineOverlay = document.getElementById('line-overlay');
+            const centerInfoText = document.getElementById('center-info-text');
+            const centerSelectors = document.getElementById('center-selectors');
+            
             const starModeBtn = document.getElementById('star-mode-btn');
             const palaceModeBtn = document.getElementById('palace-mode-btn');
-            const starSelectorCard = document.getElementById('star-selector-card');
             const overlayToggleBtn = document.getElementById('overlay-toggle-btn');
-            const starModeControls = document.getElementById('star-mode-controls');
-            const centerSubtitle = document.getElementById('center-subtitle');
+            const overlaySwitchContainer = document.getElementById('overlay-switch-container');
+            const overlaySwitchLabel = document.getElementById('overlay-switch-label');
+            const starSelectorCard = document.getElementById('star-selector-card');
 
             let currentMode = 'star';
-            let activeTargetStarName = '紫微';
-            let activeTargetStarDz = '子';
+            let activeSelectedStar = '紫微';
+            let activeStarDz = '子';
             let activeZiWeiDz = '子'; 
             let activeMingGongDz = '子';
             let showPalaceOverlay = false;
             let activeSanFangSiZhengDz = null;
             let activeTianGan = '', activeMonth = '', activeYearDz = '', activeHour = '';
 
-            const dzMap = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-            const dzToIdx = dzMap.reduce((acc, dz, i) => { acc[dz] = i; return acc; }, {});
-            const palaceOrder = ['命', '兄', '夫', '子', '財', '疾', '遷', '僕', '官', '田', '福', '父'];
-
-            // 重新定義錨點：針對中央空白區的精準對齊點 (百分比)
-            const palaceAnchors = {
-                'p1':  { x: 62.5, y: 75 },   // 子：上方內緣中心
-                'p2':  { x: 37.5, y: 75 },   // 丑：上方內緣中心
-                'p3':  { x: 25,   y: 75 },   // 寅：右上內角
-                'p4':  { x: 25,   y: 62.5 }, // 卯：右側內緣中心
-                'p5':  { x: 25,   y: 37.5 }, // 辰：右側內緣中心
-                'p6':  { x: 25,   y: 25 },   // 巳：右下內角
-                'p7':  { x: 37.5, y: 25 },   // 午：下方內緣中心
-                'p8':  { x: 62.5, y: 25 },   // 未：下方內緣中心
-                'p9':  { x: 75,   y: 25 },   // 申：左下內角
-                'p10': { x: 75,   y: 37.5 }, // 酉：左側內緣中心
-                'p11': { x: 75,   y: 62.5 }, // 戌：左側內緣中心
-                'p12': { x: 75,   y: 75 }    // 亥：左上內角
-            };
-
             function drawLine(p1Id, p2Id, container) {
-                const c1 = palaceAnchors[p1Id]; 
-                const c2 = palaceAnchors[p2Id];
-                const dx = c2.x - c1.x; 
-                const dy = c2.y - c1.y;
+                const c1 = innerAnchors[p1Id];
+                const c2 = innerAnchors[p2Id];
+                const dx = c2.x - c1.x; const dy = c2.y - c1.y;
                 const totalLength = Math.sqrt(dx * dx + dy * dy);
-                if (totalLength <= 0) return;
-                
                 const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
                 const line = document.createElement('div');
-                line.className = 'sfz-line';
-                // 100% 精準連接兩個座標，不需額外縮短長度
+                line.classList.add('sfz-line');
                 line.style.width = `${totalLength}%`;
                 line.style.left = `${c1.x}%`;
                 line.style.top = `${c1.y}%`;
@@ -591,218 +493,195 @@
                 const selectedIdx = dzToIdx[dz];
                 const indices = [selectedIdx, (selectedIdx + 4) % 12, (selectedIdx - 4 + 12) % 12, (selectedIdx + 6) % 12];
                 const ids = indices.map(idx => 'p' + (idx + 1));
-                // 畫出四正的連線形成經典三角形與對角線
-                drawLine(ids[0], ids[1], container); 
-                drawLine(ids[1], ids[2], container);
-                drawLine(ids[2], ids[0], container); 
-                drawLine(ids[0], ids[3], container);
+                drawLine(ids[0], ids[1], container); drawLine(ids[1], ids[2], container);
+                drawLine(ids[2], ids[0], container); drawLine(ids[0], ids[3], container);
             }
 
-            function calculateZiweiDzFromStar(starName, targetDz) {
-                const targetIdx = dzToIdx[targetDz];
-                const star = starPlacement.find(s => s.name === starName);
-                if (star.group === 'Z') {
-                    return dzMap[(targetIdx - star.delta + 12) % 12];
-                } else if (star.group === 'F') {
-                    const tianFuIdx = (targetIdx - star.tfOffset + 12) % 12;
-                    return dzMap[(4 - tianFuIdx + 12) % 12];
+            function calculateZiweiDzFromStar(starName, starDz) {
+                const targetIdx = dzToIdx[starDz];
+                const starDef = starPlacement.find(s => s.name === starName);
+                if (starDef.group === 'Z') {
+                    const zwIdx = (targetIdx - starDef.delta + 12) % 12;
+                    return dzMap[zwIdx];
+                } else {
+                    const tfIdx = (targetIdx - starDef.tfOffset + 12) % 12;
+                    const zwIdx = (4 - tfIdx + 12) % 12;
+                    return dzMap[zwIdx];
                 }
-                return '子';
             }
 
-            function calculateStarLayout(ziWeiDz, tiangan) {
+            function calculateStarLayout() {
                 const layout = {};
-                const ziWeiIdx = dzToIdx[ziWeiDz];
+                const ziWeiIdx = dzToIdx[activeZiWeiDz];
                 const tianFuIdx = (4 - ziWeiIdx + 12) % 12;
 
                 starPlacement.forEach((star) => {
-                    const targetIdx = star.group === 'Z' ? (ziWeiIdx + star.delta) % 12 : (tianFuIdx + star.tfOffset) % 12;
-                    const palaceId = 'p' + (targetIdx + 1);
-                    if (!layout[palaceId]) layout[palaceId] = [];
-                    layout[palaceId].push({ 
-                        name: star.name, type: 'Main',
-                        html: `<div class="star-info-container"><span class="${star.color}">${star.name}</span></div>`
-                    });
+                    let targetIdx = star.group === 'Z' ? (ziWeiIdx + star.delta) % 12 : (tianFuIdx + star.tfOffset) % 12;
+                    const pid = 'p' + (targetIdx + 1);
+                    if (!layout[pid]) layout[pid] = [];
+                    layout[pid].push({ name: star.name, html: `<div class="star-info-container"><span class="${star.color}">${star.name}</span></div>`, type: 'Main' });
                 });
 
-                if (tiangan && luYangTuoTable[tiangan]) {
-                    const [luDz, yangDz, tuoDz] = luYangTuoTable[tiangan];
-                    const pushAux = (dz, name, cls) => {
-                        const id = 'p' + (dzToIdx[dz] + 1);
-                        if (!layout[id]) layout[id] = [];
-                        layout[id].push({ name, type: 'Aux', html: `<div class="star-info-container"><span class="star-box ${cls}">${name}</span></div>` });
+                if (activeTianGan && luYangTuoTable[activeTianGan]) {
+                    const [luDz, yangDz, tuoDz] = luYangTuoTable[activeTianGan];
+                    const addAux = (dz, name, cls) => {
+                        const pid = 'p' + (dzToIdx[dz] + 1);
+                        if (!layout[pid]) layout[pid] = [];
+                        layout[pid].push({ name, html: `<div class="star-info-container"><span class="star-box ${cls}">${name}</span></div>`, type: 'Aux' });
                     };
-                    pushAux(luDz, '祿存', 'luchun'); pushAux(yangDz, '擎羊', 'yangtuo'); pushAux(tuoDz, '陀羅', 'yangtuo');
+                    addAux(luDz, '祿存', 'luchun'); addAux(yangDz, '擎羊', 'yangtuo'); addAux(tuoDz, '陀羅', 'yangtuo');
                 }
 
                 if (activeMonth) {
-                    const mIdx = parseInt(activeMonth) - 1; 
-                    const pushMinor = (idx, name) => {
-                        const id = 'p' + (idx + 1);
-                        if (!layout[id]) layout[id] = [];
-                        layout[id].push({ name, type: 'Minor', html: `<div class="star-info-container"><span class="star-minor-aux">${name}</span></div>`});
-                    };
-                    pushMinor((4 + mIdx) % 12, '左輔'); pushMinor((10 - mIdx + 12) % 12, '右弼');
+                    const mIdx = parseInt(activeMonth) - 1;
+                    const zfId = 'p' + ((4 + mIdx) % 12 + 1); const ybId = 'p' + ((10 - mIdx + 12) % 12 + 1);
+                    if (!layout[zfId]) layout[zfId] = []; layout[zfId].push({ name: '左輔', html: `<div class="star-info-container"><span class="star-minor-aux">左輔</span></div>`, type: 'Aux' });
+                    if (!layout[ybId]) layout[ybId] = []; layout[ybId].push({ name: '右弼', html: `<div class="star-info-container"><span class="star-minor-aux">右弼</span></div>`, type: 'Aux' });
                 }
 
                 if (activeHour) {
                     const hIdx = dzToIdx[activeHour];
-                    const pushMinor = (idx, name, isBad = false) => {
-                        const id = 'p' + (idx + 1);
-                        if (!layout[id]) layout[id] = [];
-                        layout[id].push({ name, type: 'Minor', html: `<div class="star-info-container"><span class="${isBad ? 'star-minor-bad' : 'star-minor-aux'}">${name}</span></div>`});
-                    };
-                    pushMinor((4 + hIdx) % 12, '文曲'); pushMinor((10 - hIdx + 12) % 12, '文昌');
-                    pushMinor((11 + hIdx) % 12, '地劫', true); pushMinor((11 - hIdx + 12) % 12, '地空', true);
+                    const wqId = 'p' + ((4 + hIdx) % 12 + 1); const wcId = 'p' + ((10 - hIdx + 12) % 12 + 1);
+                    const djId = 'p' + ((11 + hIdx) % 12 + 1); const dkId = 'p' + ((11 - hIdx + 12) % 12 + 1);
+                    if (!layout[wqId]) layout[wqId] = []; layout[wqId].push({ name: '文曲', html: `<div class="star-info-container"><span class="star-minor-aux">文曲</span></div>`, type: 'Aux' });
+                    if (!layout[wcId]) layout[wcId] = []; layout[wcId].push({ name: '文昌', html: `<div class="star-info-container"><span class="star-minor-aux">文昌</span></div>`, type: 'Aux' });
+                    if (!layout[djId]) layout[djId] = []; layout[djId].push({ name: '地劫', html: `<div class="star-info-container"><span class="star-minor-bad">地劫</span></div>`, type: 'Aux' });
+                    if (!layout[dkId]) layout[dkId] = []; layout[dkId].push({ name: '地空', html: `<div class="star-info-container"><span class="star-minor-bad">地空</span></div>`, type: 'Aux' });
 
                     if (activeYearDz) {
-                        let huoStart = -1, lingStart = -1;
-                        if (['寅', '午', '戌'].includes(activeYearDz)) { huoStart = 1; lingStart = 3; }
-                        else if (['申', '子', '辰'].includes(activeYearDz)) { huoStart = 2; lingStart = 10; }
-                        else if (['巳', '酉', '丑'].includes(activeYearDz)) { huoStart = 3; lingStart = 10; }
-                        else if (['亥', '卯', '未'].includes(activeYearDz)) { huoStart = 9; lingStart = 10; }
-                        
-                        if (huoStart !== -1) {
-                            pushMinor((huoStart + hIdx) % 12, '火星', true); pushMinor((lingStart + hIdx) % 12, '鈴星', true);
+                        let hStart = -1, lStart = -1;
+                        if (['寅', '午', '戌'].includes(activeYearDz)) { hStart = 1; lStart = 3; }
+                        else if (['申', '子', '辰'].includes(activeYearDz)) { hStart = 2; lStart = 10; }
+                        else if (['巳', '酉', '丑'].includes(activeYearDz)) { hStart = 3; lStart = 10; }
+                        else if (['亥', '卯', '未'].includes(activeYearDz)) { hStart = 9; lStart = 10; }
+                        if (hStart !== -1) {
+                            const huoId = 'p' + ((hStart + hIdx) % 12 + 1); const lingId = 'p' + ((lStart + hIdx) % 12 + 1);
+                            if (!layout[huoId]) layout[huoId] = []; layout[huoId].push({ name: '火星', html: `<div class="star-info-container"><span class="star-minor-bad">火星</span></div>`, type: 'Aux' });
+                            if (!layout[lingId]) layout[lingId] = []; layout[lingId].push({ name: '鈴星', html: `<div class="star-info-container"><span class="star-minor-bad">鈴星</span></div>`, type: 'Aux' });
                         }
                     }
                 }
-                return layout;
-            }
-
-            function calculatePalaceLayout(mingGongDz) {
-                const layout = {};
-                const mingGongIdx = dzToIdx[mingGongDz];
-                palaceOrder.forEach((palaceName, offset) => {
-                    const palaceId = 'p' + ((mingGongIdx - offset + 12) % 12 + 1);
-                    layout[palaceId] = `<span class="palace-name${palaceName === '命' ? ' is-minggong' : ''}">${palaceName}</span>`;
-                });
                 return layout;
             }
 
             function renderLayout() {
                 lineOverlay.innerHTML = '';
-                palaceElements.forEach(palace => {
-                    palace.innerHTML = `<span class="dz-label">${palace.getAttribute('data-dz')}</span>`; 
-                    palace.classList.remove('san-fang', 'si-zheng');
+                palaceElements.forEach(p => {
+                    p.innerHTML = `<span class="dz-label">${p.getAttribute('data-dz')}</span>`;
+                    p.classList.remove('san-fang', 'si-zheng');
                 });
 
                 if (activeSanFangSiZhengDz) {
                     drawSFZLines(activeSanFangSiZhengDz, lineOverlay);
-                    const selectedIdx = dzToIdx[activeSanFangSiZhengDz];
-                    [0, 4, 8].forEach(offset => document.getElementById('p' + ((selectedIdx + offset) % 12 + 1)).classList.add('san-fang'));
-                    document.getElementById('p' + ((selectedIdx + 6) % 12 + 1)).classList.add('si-zheng');
+                    const sIdx = dzToIdx[activeSanFangSiZhengDz];
+                    ['p'+(sIdx+1), 'p'+((sIdx+4)%12+1), 'p'+((sIdx-4+12)%12+1)].forEach(id => document.getElementById(id).classList.add('san-fang'));
+                    document.getElementById('p'+((sIdx+6)%12+1)).classList.add('si-zheng');
                 }
 
                 if (currentMode === 'star') {
                     const currentSiHua = activeTianGan ? siHuaTable[activeTianGan] : {};
-                    const starLayout = calculateStarLayout(activeZiWeiDz, activeTianGan);
-                    
+                    const starLayout = calculateStarLayout();
                     for (const id in starLayout) {
-                        if (!document.getElementById(id)) continue;
-                        const starHtml = starLayout[id].map(star => {
-                            let html = star.html;
-                            if ((star.type === 'Main' || star.type === 'Aux') && currentSiHua[star.name]) {
-                                const hua = currentSiHua[star.name]; 
-                                const cls = hua === '忌' ? 'huaji' : 'hualu';
-                                html = html.replace('</span></div>', `</span><span class="si-hua ${cls}">${hua}</span></div>`);
-                            }
-                            return html;
-                        }).join('');
-                        document.getElementById(id).innerHTML = starHtml + document.getElementById(id).innerHTML; 
-                    }
-
-                    if (showPalaceOverlay) {
-                        const palaceLayout = calculatePalaceLayout(activeMingGongDz);
-                        for (const id in palaceLayout) {
-                            if (document.getElementById(id)) document.getElementById(id).innerHTML += palaceLayout[id];
+                        const palace = document.getElementById(id);
+                        if (palace) {
+                            const html = starLayout[id].map(s => {
+                                let h = s.html;
+                                if ((s.type === 'Main' || s.type === 'Aux') && currentSiHua[s.name]) {
+                                    const ht = currentSiHua[s.name];
+                                    const hc = ht === '祿' ? 'hualu' : ht === '權' ? 'huaquan' : ht === '科' ? 'huake' : 'huaji';
+                                    h = h.replace(`</span></div>`, `</span><span class="si-hua ${hc}">${ht}</span></div>`);
+                                }
+                                return h;
+                            }).join('');
+                            palace.innerHTML = html + palace.innerHTML;
                         }
                     }
 
-                    let subText = `**${activeTargetStarName}** 在 **${activeTargetStarDz}** 宮`;
-                    if (activeTargetStarName !== '紫微') subText += `<br><span style="font-size:0.8em; color:#7e57c2; font-weight:normal;">(紫微在 ${activeZiWeiDz})</span>`;
-                    centerSubtitle.innerHTML = `${subText}${showPalaceOverlay ? `<br><span style="font-size:0.85em; color:#2E7D32;">(命宮在 ${activeMingGongDz})</span>` : ''}`;
-
-                    document.querySelectorAll('#ziwei-dz-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
-                    document.querySelector(`#ziwei-dz-buttons .palace-btn[data-dz="${activeTargetStarDz}"]`).classList.add('active');
-
-                } else {
-                    const palaceLayout = calculatePalaceLayout(activeMingGongDz);
-                    for (const id in palaceLayout) {
-                        if (document.getElementById(id)) document.getElementById(id).innerHTML = palaceLayout[id] + document.getElementById(id).innerHTML;
+                    if (showPalaceOverlay) {
+                        const mgIdx = dzToIdx[activeMingGongDz];
+                        palaceOrder.forEach((name, offset) => {
+                            const pid = 'p' + ((mgIdx - offset + 12) % 12 + 1);
+                            const cls = name === '命' ? ' is-minggong' : '';
+                            document.getElementById(pid).innerHTML += `<span class="palace-name${cls}">${name}</span>`;
+                        });
                     }
-                    centerSubtitle.innerHTML = `命宮在 **${activeMingGongDz}** 宮<br><span style="font-size:0.85em; color:#7e57c2; font-weight:normal;">十二宮位架構</span>`;
+
+                    let centerText = `**${activeSelectedStar}** 在 **${activeStarDz}** 宮`;
+                    if (activeSelectedStar !== '紫微') centerText += `<br><span style="font-size: 0.85em; font-weight: normal;">(紫微在${activeZiWeiDz})</span>`;
+                    if (showPalaceOverlay) centerText += `<br><span style="font-size: 0.85em; font-weight: normal;">(命宮在${activeMingGongDz})</span>`;
+                    centerInfoText.innerHTML = centerText;
+
+                    document.querySelectorAll('#star-dz-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`#star-dz-buttons .palace-btn.btn-dz-${activeStarDz}`).classList.add('active');
+                } else {
+                    const mgIdx = dzToIdx[activeMingGongDz];
+                    palaceOrder.forEach((name, offset) => {
+                        const pid = 'p' + ((mgIdx - offset + 12) % 12 + 1);
+                        const cls = name === '命' ? ' is-minggong' : '';
+                        document.getElementById(pid).innerHTML = `<span class="palace-name${cls}">${name}</span>` + document.getElementById(pid).innerHTML;
+                    });
+                    centerInfoText.innerHTML = `命宮 在 **${activeMingGongDz}** 宮<br><span style="font-size: 0.85em; font-weight: normal;">十二宮位架構</span>`;
                 }
 
-                document.querySelectorAll('#palace-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`#palace-buttons .palace-btn[data-dz="${activeMingGongDz}"]`).classList.add('active');
+                document.querySelectorAll('#palace-dz-buttons .palace-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`#palace-dz-buttons .palace-btn.btn-dz-${activeMingGongDz}`).classList.add('active');
             }
 
             function switchMode(mode) {
                 currentMode = mode;
                 if (mode === 'star') {
                     starModeBtn.classList.add('active'); palaceModeBtn.classList.remove('active');
-                    starSelectorCard.style.display = 'flex'; starModeControls.style.display = 'flex';
+                    starSelectorCard.style.display = 'block'; centerSelectors.style.display = 'block';
+                    overlaySwitchContainer.style.display = 'inline-block'; overlaySwitchLabel.style.display = 'inline';
                 } else {
                     starModeBtn.classList.remove('active'); palaceModeBtn.classList.add('active');
-                    starSelectorCard.style.display = 'none'; starModeControls.style.display = 'none';
-                    showPalaceOverlay = false; overlayToggleBtn.classList.remove('active');
+                    starSelectorCard.style.display = 'none'; centerSelectors.style.display = 'none';
+                    showPalaceOverlay = false; overlayToggleBtn.checked = false;
+                    overlaySwitchContainer.style.display = 'none'; overlaySwitchLabel.style.display = 'none';
                 }
                 renderLayout();
             }
 
+            // 初始化按鈕
             dzMap.forEach(dz => {
-                const starBtn = document.createElement('button');
-                starBtn.textContent = dz; starBtn.className = 'palace-btn'; starBtn.setAttribute('data-dz', dz);
-                starBtn.addEventListener('click', () => { 
-                    activeTargetStarDz = dz; 
-                    activeZiWeiDz = calculateZiweiDzFromStar(activeTargetStarName, dz);
-                    renderLayout(); 
-                });
-                ziweiDzButtonsContainer.appendChild(starBtn);
-                
-                const palaceBtn = document.createElement('button');
-                palaceBtn.textContent = dz; palaceBtn.className = 'palace-btn'; palaceBtn.setAttribute('data-dz', dz);
-                palaceBtn.addEventListener('click', () => { activeMingGongDz = dz; renderLayout(); });
-                palaceButtonsContainer.appendChild(palaceBtn);
+                const sBtn = document.createElement('button');
+                sBtn.textContent = dz; sBtn.className = `palace-btn btn-dz-${dz}`;
+                sBtn.onclick = () => { activeStarDz = dz; activeZiWeiDz = calculateZiweiDzFromStar(activeSelectedStar, dz); renderLayout(); };
+                starDzBtnsContainer.appendChild(sBtn);
+
+                const pBtn = document.createElement('button');
+                pBtn.textContent = dz; pBtn.className = `palace-btn btn-dz-${dz}`;
+                pBtn.onclick = () => { activeMingGongDz = dz; renderLayout(); };
+                palaceDzBtnsContainer.appendChild(pBtn);
             });
 
-            targetStarSelect.addEventListener('change', function() {
-                activeTargetStarName = this.value;
-                activeZiWeiDz = calculateZiweiDzFromStar(activeTargetStarName, activeTargetStarDz);
+            mainStarSelect.addEventListener('change', function() {
+                activeSelectedStar = this.value;
+                activeZiWeiDz = calculateZiweiDzFromStar(activeSelectedStar, activeStarDz);
                 renderLayout();
             });
 
-            overlayToggleBtn.addEventListener('click', () => {
-                showPalaceOverlay = !showPalaceOverlay;
-                overlayToggleBtn.classList.toggle('active', showPalaceOverlay);
-                renderLayout();
+            overlayToggleBtn.addEventListener('change', function() {
+                showPalaceOverlay = this.checked; renderLayout();
             });
 
             starModeBtn.addEventListener('click', () => switchMode('star'));
             palaceModeBtn.addEventListener('click', () => switchMode('palace'));
 
-            [tianganSelect, monthSelect, yearDzSelect, hourSelect].forEach(sel => 
-                sel.addEventListener('change', (e) => { 
-                    if(e.target.id === 'tiangan-select') activeTianGan = e.target.value;
-                    if(e.target.id === 'month-select') activeMonth = e.target.value;
-                    if(e.target.id === 'year-dz-select') activeYearDz = e.target.value;
-                    if(e.target.id === 'hour-select') activeHour = e.target.value;
-                    renderLayout(); 
-                })
-            );
+            tianganSelect.addEventListener('change', function() { activeTianGan = this.value; renderLayout(); });
+            monthSelect.addEventListener('change', function() { activeMonth = this.value; renderLayout(); });
+            yearDzSelect.addEventListener('change', function() { activeYearDz = this.value; renderLayout(); });
+            hourSelect.addEventListener('change', function() { activeHour = this.value; renderLayout(); });
 
-            palaceElements.forEach(palace => {
-                palace.addEventListener('click', () => {
-                    const dz = palace.getAttribute('data-dz');
-                    activeSanFangSiZhengDz = (activeSanFangSiZhengDz === dz) ? null : dz;
-                    renderLayout();
-                });
-            });
+            palaceElements.forEach(p => p.addEventListener('click', function() {
+                const dz = this.getAttribute('data-dz');
+                activeSanFangSiZhengDz = activeSanFangSiZhengDz === dz ? null : dz;
+                renderLayout();
+            }));
 
-            activeZiWeiDz = calculateZiweiDzFromStar(activeTargetStarName, activeTargetStarDz);
             switchMode('star');
         });
     </script>
 </body>
 </html>
+
